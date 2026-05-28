@@ -1,0 +1,18 @@
+[
+  {
+    "slug": "hola-mundo",
+    "title": "Hola mundo: por qué armé mi portafolio en Blazor",
+    "summary": "Cómo decidí construir mi portafolio personal usando Blazor WebAssembly en lugar de un stack más tradicional.",
+    "date": "2026-05-26T00:00:00",
+    "tags": ["Blazor", ".NET", "Reflexión"],
+    "readingMinutes": 3
+  },
+  {
+    "slug": "primer-proyecto-csharp",
+    "title": "Mi primer proyecto serio en C#: lo que aprendí",
+    "summary": "Notas sobre refactorizar código de práctica aplicando SOLID y separación de responsabilidades.",
+    "date": "2026-04-12T00:00:00",
+    "tags": ["C#", "SOLID", "Refactoring"],
+    "readingMinutes": 5
+  }
+]

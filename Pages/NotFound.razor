@@ -1,0 +1,29 @@
+@page "/not-found"
+@layout MainLayout
+
+<PageTitle>404 | Mateo</PageTitle>
+
+<section class="section">
+    <div class="container not-found">
+        <p class="mono accent">// HTTP 404</p>
+        <h1>Página no encontrada</h1>
+        <p class="muted">El recurso que buscas no existe o fue movido.</p>
+        <a href="" class="btn btn-primary">← Volver al inicio</a>
+    </div>
+</section>
+
+<style>
+    .not-found {
+        text-align: center;
+        padding: 4rem 0;
+    }
+
+    .not-found h1 {
+        font-size: clamp(2.5rem, 8vw, 4rem);
+        color: var(--text-strong);
+    }
+
+    .not-found p {
+        margin-bottom: 2rem;
+    }
+</style>

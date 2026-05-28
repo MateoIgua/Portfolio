@@ -1,0 +1,115 @@
+@page "/projects"
+@inject ProjectService ProjectsSvc
+
+<PageTitle>Proyectos | Mateo</PageTitle>
+
+<section class="section">
+    <div class="container">
+        <p class="mono accent">// proyectos</p>
+        <h1>Proyectos</h1>
+        <p class="lead">Cosas que he construido mientras aprendo y experimento.</p>
+
+        @if (_projects is null)
+        {
+            <p class="muted">Cargando proyectos...</p>
+        }
+        else if (_projects.Count == 0)
+        {
+            <p class="muted">Aún no hay proyectos publicados.</p>
+        }
+        else
+        {
+            <div class="projects-grid">
+                @foreach (var p in _projects)
+                {
+                    <article class="project-card">
+                        <div class="project-head">
+                            <h3>@p.Title</h3>
+                            <span class="muted mono">@p.Year</span>
+                        </div>
+                        <p>@p.Description</p>
+                        <div class="project-tags">
+                            @foreach (var tag in p.Tags)
+                            {
+                                <span class="tag">@tag</span>
+                            }
+                        </div>
+                        <div class="project-links">
+                            @if (!string.IsNullOrEmpty(p.RepoUrl))
+                            {
+                                <a href="@p.RepoUrl" target="_blank" rel="noopener">Código →</a>
+                            }
+                            @if (!string.IsNullOrEmpty(p.DemoUrl))
+                            {
+                                <a href="@p.DemoUrl" target="_blank" rel="noopener">Demo →</a>
+                            }
+                        </div>
+                    </article>
+                }
+            </div>
+        }
+    </div>
+</section>
+
+@code {
+    private IReadOnlyList<Project>? _projects;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _projects = await ProjectsSvc.GetAllAsync();
+    }
+}
+
+<style>
+    .lead {
+        font-size: 1.1rem;
+        margin-bottom: 2.5rem;
+    }
+
+    .projects-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .project-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 1.5rem;
+        transition: all 0.2s ease;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .project-card:hover {
+        border-color: var(--accent);
+        transform: translateY(-3px);
+        box-shadow: var(--shadow);
+    }
+
+    .project-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        margin-bottom: 0.5rem;
+    }
+
+    .project-head h3 {
+        margin: 0;
+        color: var(--text-strong);
+        font-size: 1.2rem;
+    }
+
+    .project-tags {
+        margin: 0.5rem 0 1rem;
+    }
+
+    .project-links {
+        display: flex;
+        gap: 1rem;
+        margin-top: auto;
+        font-size: 0.9rem;
+        font-family: 'JetBrains Mono', monospace;
+    }
+</style>

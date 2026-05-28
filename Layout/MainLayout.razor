@@ -1,0 +1,34 @@
+@inherits LayoutComponentBase
+@inject ThemeService Theme
+@implements IDisposable
+
+<div class="layout">
+    <NavMenu />
+
+    <main class="main-content">
+        @Body
+    </main>
+
+    <footer class="site-footer">
+        <div class="container footer-inner">
+            <span class="muted">&copy; @DateTime.Now.Year Mateo &middot; Hecho con Blazor &amp; <span class="accent">&hearts;</span></span>
+            <span class="muted mono">v1.0</span>
+        </div>
+    </footer>
+</div>
+
+@code {
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await Theme.InitializeAsync();
+            Theme.OnThemeChanged += StateHasChanged;
+        }
+    }
+
+    public void Dispose()
+    {
+        Theme.OnThemeChanged -= StateHasChanged;
+    }
+}
