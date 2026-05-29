@@ -1,4 +1,4 @@
-name: Deploy Blazor WASM to GitHub Pages
+name: Deploy static site to GitHub Pages
 
 on:
   push:
@@ -10,56 +10,36 @@ permissions:
   pages: write
   id-token: write
 
-# Allow only one concurrent deployment, cancel in-progress runs
 concurrency:
   group: "pages"
   cancel-in-progress: true
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: '10.0.x'
-          include-prerelease: true
-
-      - name: Publish Blazor WASM
-        run: dotnet publish Portfolio.csproj -c Release -o publish
-
-      - name: Rewrite base href for project pages
-        # Repo is published at https://<user>.github.io/Portfolio/
-        # so <base href="/" /> must become <base href="/Portfolio/" />
-        run: |
-          sed -i 's|<base href="/" />|<base href="/Portfolio/" />|g' publish/wwwroot/index.html
-
-      - name: Copy index.html as 404.html (SPA routing fallback)
-        # GitHub Pages serves 404.html for any unknown path. By making it
-        # identical to index.html, Blazor's router can take over and resolve
-        # deep links like /Portfolio/blog/hola-mundo on direct visits/refresh.
-        run: cp publish/wwwroot/index.html publish/wwwroot/404.html
-
-      - name: Add .nojekyll
-        # Prevents GitHub Pages from ignoring files/folders starting with "_"
-        # (Blazor's _framework/ folder would otherwise be stripped).
-        run: touch publish/wwwroot/.nojekyll
-
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: publish/wwwroot
-
   deploy:
-    needs: build
     runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Stage site folder
+        # We assemble exactly what should be served, so the .github folder
+        # and other repo metadata don't end up published.
+        run: |
+          mkdir -p _site
+          cp -r index.html proyectos.html experimentos.html sobre-mi.html 404.html favicon.png _site/
+          cp -r assets _site/
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./_site
+
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4

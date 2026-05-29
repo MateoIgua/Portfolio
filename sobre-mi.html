@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SOBRE MÍ / MATEO IGUA</title>
+    <meta name="description" content="Sobre Mateo Igua — desarrollador C# / .NET. Bio, skills, contacto." />
+
+    <link rel="icon" type="image/png" href="favicon.png" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=VT323&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+
+    <link rel="stylesheet" href="assets/css/reset.css" />
+    <link rel="stylesheet" href="assets/css/main.css" />
+</head>
+<body>
+
+    <!-- STATUS BAR -->
+    <header class="statusbar">
+        <div class="container statusbar-inner">
+            <div class="statusbar-cell"><span class="label">INDEX:</span> <span class="value">MATEO.IGUA</span></div>
+            <div class="statusbar-cell"><span class="label">COMMAND:</span> <span class="value value--accent">CAT ABOUT.TXT<span class="cursor"></span></span></div>
+            <div class="statusbar-cell"><span class="label">TIME:</span> <span class="value" id="clock">--:--:--</span></div>
+            <div class="statusbar-cell"><span class="label">*** PAGE 4 READY ***</span></div>
+        </div>
+    </header>
+
+    <!-- NAV -->
+    <nav class="nav">
+        <div class="container nav-inner">
+            <a href="index.html" class="brand"><span class="bracket">[</span>MI<span class="bracket">]</span></a>
+            <ul class="nav-links">
+                <li><a href="index.html">HOME</a></li>
+                <li><a href="proyectos.html">PROYECTOS</a></li>
+                <li><a href="experimentos.html">EXPERIMENTOS</a></li>
+                <li><a href="sobre-mi.html" class="active">SOBRE MÍ</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero">
+        <div class="container">
+            <p class="hero-label">EXTRACT FROM: ABOUT.TXT</p>
+            <h1 class="hero-title">
+                SOBRE<br />
+                MÍ<span class="accent">.</span>
+            </h1>
+            <p class="hero-tagline">
+                Desarrollador en formación, enfocado en C# y el ecosistema .NET.
+                Me interesa el diseño de sistemas backend, la arquitectura
+                limpia y construir cosas que sean fáciles de mantener.
+            </p>
+        </div>
+    </section>
+
+    <!-- BIO + CONTACTO ============ -->
+    <section class="section">
+        <div class="container two-col">
+            <div>
+                <p class="section-label">QUIÉN</p>
+                <h2 class="section-title">EL DESARROLLADOR</h2>
+                <p style="max-width:62ch; margin-bottom:1rem;">
+                    Soy <strong>Mateo Igua</strong>. Llevo un tiempo
+                    construyendo proyectos personales en C# para
+                    fortalecer mis bases: arquitectura por capas, OOP,
+                    LINQ, EF Core y patrones de diseño.
+                </p>
+                <p style="max-width:62ch; margin-bottom:1rem;">
+                    Estoy convencido de que los ejercicios pequeños bien
+                    hechos enseñan más que proyectos enormes a medias.
+                    Por eso este portafolio tiene una sección entera
+                    de <strong>experimentos</strong>: piezas cortas pero
+                    bien documentadas.
+                </p>
+                <p style="max-width:62ch;">
+                    Fuera del código, me interesa entender por qué las
+                    cosas funcionan: leer sobre patrones, ver cómo
+                    resuelven problemas otros desarrolladores, y aplicar
+                    eso en lo siguiente que construyo.
+                </p>
+            </div>
+
+            <div class="info-block">
+                <p class="info-block-header">CONTACTO</p>
+                <ul>
+                    <li><a href="mailto:mateoigua.mg@gmail.com">EMAIL</a></li>
+                    <li><a href="https://github.com/MateoIgua" target="_blank" rel="noopener">GITHUB</a></li>
+                    <li><a href="https://www.linkedin.com/in/mateo-andr%C3%A9s-gonz%C3%A1lez-igua-640638208/" target="_blank" rel="noopener">LINKEDIN</a></li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- SKILLS TABLA TERMINAL ============ -->
+    <section class="section">
+        <div class="container">
+            <p class="section-label">CAPACIDADES</p>
+            <h2 class="section-title">SKILL TABLE</h2>
+
+            <div class="terminal-table">
+                <div class="terminal-table-header">SKILL CONTROL · NIVEL Y CATEGORÍA</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th class="col-id">ID</th>
+                            <th>NAME</th>
+                            <th>CATEGORY</th>
+                            <th>FOCUS</th>
+                            <th class="col-status">LEVEL</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td class="col-id">1</td><td>C#</td><td>LANGUAGE</td><td>BACKEND</td><td class="col-status">SÓLIDO</td></tr>
+                        <tr><td class="col-id">2</td><td>.NET / ASP.NET CORE</td><td>FRAMEWORK</td><td>API · WEB</td><td class="col-status">EN CURSO</td></tr>
+                        <tr><td class="col-id">3</td><td>SQL</td><td>QUERY</td><td>DATOS</td><td class="col-status">SÓLIDO</td></tr>
+                        <tr><td class="col-id">4</td><td>EF CORE</td><td>ORM</td><td>PERSISTENCIA</td><td class="col-status">EN CURSO</td></tr>
+                        <tr><td class="col-id">5</td><td>OOP / SOLID</td><td>DISEÑO</td><td>ARQUITECTURA</td><td class="col-status">PRACTICANDO</td></tr>
+                        <tr><td class="col-id">6</td><td>HTML / CSS</td><td>FRONTEND</td><td>UI</td><td class="col-status">BÁSICO</td></tr>
+                        <tr><td class="col-id">7</td><td>GIT</td><td>TOOL</td><td>VERSIONADO</td><td class="col-status">EN CURSO</td></tr>
+                        <tr><td class="col-id">8</td><td>BLAZOR</td><td>FRAMEWORK</td><td>FRONTEND C#</td><td class="col-status">EXPLORANDO</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- QUOTE (estilo AS400 / Luigi Russolo) -->
+    <section class="section">
+        <div class="container">
+            <div class="info-block">
+                <p class="info-block-header">EXTRACT FROM · CITA</p>
+                <p style="font-family:var(--font-mono); font-size:1.3rem; line-height:1.5; color:var(--text-bright); max-width:62ch; text-transform:uppercase;">
+                    "La variedad de soluciones es infinita. Si hoy, cuando
+                    tenemos miles de bibliotecas distintas, podemos
+                    distinguir miles de patrones, mañana, cuando aparezcan
+                    nuevos paradigmas, podremos distinguir diez, veinte o
+                    treinta mil más — no de manera imitativa, sino para
+                    combinarlos según nuestra imaginación."
+                </p>
+                <p class="mono dim" style="margin-top:1rem;">— LIBREMENTE ADAPTADO DE LUIGI RUSSOLO, 1913</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- BIG STATEMENT -->
+    <section class="section">
+        <div class="container">
+            <h2 class="big-statement">
+                ESCRIBIR CÓDIGO ES <span class="accent">PENSAR</span>
+                CLARO POR ESCRITO.
+            </h2>
+        </div>
+    </section>
+
+    <!-- MARQUEE -->
+    <div class="marquee">
+        <div class="marquee-track">
+            <span>HIRE ME</span><span>LET'S TALK</span><span>OPEN TO COLLAB</span><span>BACKEND</span><span>.NET</span>
+            <span>C#</span><span>SOLID</span><span>OPEN SOURCE</span><span>LEARNING</span><span>BUILDING</span>
+            <span>HIRE ME</span><span>LET'S TALK</span><span>OPEN TO COLLAB</span><span>BACKEND</span><span>.NET</span>
+            <span>C#</span><span>SOLID</span><span>OPEN SOURCE</span><span>LEARNING</span><span>BUILDING</span>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="container footer-inner">
+            <span>&copy; 2026 MATEO IGUA · BUILT WITH HTML &amp; CSS</span>
+            <span>v2.0 · LAST UPDATE 2026-05-28</span>
+        </div>
+    </footer>
+
+    <script src="assets/js/main.js"></script>
+</body>
+</html>

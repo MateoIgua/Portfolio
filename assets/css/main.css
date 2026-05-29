@@ -1,0 +1,745 @@
+/* =================================================================
+   PORTFOLIO — Mateo Igua
+   Estética: AS400 terminal (verde/negro) + estructura Cipher (Cards)
+   =================================================================
+
+   Tabla de contenidos:
+   1. @font-face (New Mercat hook + fallbacks)
+   2. Variables CSS (paleta, tipografía, espaciado)
+   3. Base (body, headings, links)
+   4. Layout (container, grid)
+   5. Status bar (AS400 top bar)
+   6. Navigation
+   7. Hero (Cipher style big heading)
+   8. Section labels (/ LABEL)
+   9. Cards (stack, projects, experiments)
+  10. Tables (REGISTER CONTROL style)
+  11. Buttons
+  12. Marquee
+  13. Footer
+  14. Scanline overlay (CRT effect)
+  15. Utilities y responsive
+  ================================================================= */
+
+
+/* -----------------------------------------------------------------
+   1. @font-face — New Mercat
+   -----------------------------------------------------------------
+   Para activar Mercat: descargá los archivos de
+   https://www.misterfonts.com/new-mercat/, copialos a /assets/fonts/
+   con los nombres indicados y descomentá los @font-face de abajo.
+   Mientras tanto, el sitio cae al fallback Space Mono Bold.
+*/
+
+/*
+@font-face {
+    font-family: 'New Mercat';
+    src: url('../fonts/NewMercat-Regular.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'New Mercat';
+    src: url('../fonts/NewMercat-Bold.woff2') format('woff2');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+*/
+
+
+/* -----------------------------------------------------------------
+   2. Variables
+   ----------------------------------------------------------------- */
+:root {
+    /* Colores — paleta AS400 phosphor */
+    --bg:              #050706;
+    --bg-surface:      #0a0e0b;
+    --bg-elev:         #0f1610;
+    --border:          #1e3a1f;
+    --border-bright:   #2e5f30;
+    --text:            #4af04a;
+    --text-dim:        #2a8a2a;
+    --text-bright:     #b8ffb8;
+    --accent:          #f4ff3a;   /* amarillo eléctrico para énfasis (estilo Cipher) */
+    --error:           #ff5555;
+    --shadow-glow:     0 0 24px rgba(74, 240, 74, 0.15);
+
+    /* Tipografía */
+    --font-display:    'New Mercat', 'Space Mono', ui-monospace, monospace;
+    --font-mono:       'VT323', 'Courier New', monospace;
+    --font-text:       'Space Mono', ui-monospace, 'Courier New', monospace;
+
+    /* Espaciado */
+    --space-1: 0.25rem;
+    --space-2: 0.5rem;
+    --space-3: 1rem;
+    --space-4: 1.5rem;
+    --space-5: 2rem;
+    --space-6: 3rem;
+    --space-7: 5rem;
+
+    /* Layout */
+    --container-max: 1280px;
+    --container-pad: 1.5rem;
+
+    /* Status bar */
+    --status-h: 2.2rem;
+}
+
+
+/* -----------------------------------------------------------------
+   3. Base
+   ----------------------------------------------------------------- */
+body {
+    font-family: var(--font-text);
+    font-size: 15px;
+    line-height: 1.6;
+    background: var(--bg);
+    color: var(--text);
+    overflow-x: hidden;
+    /* sutil tinte verde de fondo para el aire CRT */
+    background-image:
+        radial-gradient(ellipse at center, rgba(74, 240, 74, 0.04) 0%, transparent 70%);
+}
+
+::selection {
+    background: var(--text);
+    color: var(--bg);
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+    color: var(--text-bright);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+}
+
+a {
+    color: var(--accent);
+    transition: color 0.15s ease, background-color 0.15s ease;
+}
+
+a:hover {
+    color: var(--bg);
+    background-color: var(--accent);
+}
+
+strong, b {
+    color: var(--text-bright);
+    font-weight: 700;
+}
+
+p {
+    color: var(--text);
+}
+
+
+/* -----------------------------------------------------------------
+   4. Layout
+   ----------------------------------------------------------------- */
+.container {
+    width: 100%;
+    max-width: var(--container-max);
+    margin: 0 auto;
+    padding: 0 var(--container-pad);
+}
+
+.section {
+    padding: var(--space-6) 0;
+    border-top: 1px solid var(--border);
+}
+
+.section--no-border { border-top: none; }
+
+
+/* -----------------------------------------------------------------
+   5. Status bar (top - AS400 style)
+   ----------------------------------------------------------------- */
+.statusbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    height: var(--status-h);
+    background: var(--bg-surface);
+    border-bottom: 1px solid var(--border);
+    font-family: var(--font-mono);
+    font-size: 1.05rem;
+    color: var(--text-dim);
+    display: flex;
+    align-items: center;
+}
+
+.statusbar-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-3);
+    width: 100%;
+}
+
+.statusbar-cell {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    white-space: nowrap;
+}
+
+.statusbar-cell .label {
+    color: var(--text-dim);
+}
+
+.statusbar-cell .value {
+    color: var(--text);
+}
+
+.statusbar-cell .value--accent {
+    color: var(--accent);
+}
+
+/* el cursor parpadeante junto al COMMAND */
+.cursor {
+    display: inline-block;
+    width: 0.5em;
+    height: 1em;
+    background: var(--text);
+    margin-left: 0.1em;
+    vertical-align: text-bottom;
+    animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+    0%, 50%   { opacity: 1; }
+    51%, 100% { opacity: 0; }
+}
+
+
+/* -----------------------------------------------------------------
+   6. Navigation
+   ----------------------------------------------------------------- */
+.nav {
+    border-bottom: 1px solid var(--border);
+    background: var(--bg);
+    padding: var(--space-3) 0;
+}
+
+.nav-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+    flex-wrap: wrap;
+}
+
+.brand {
+    font-family: var(--font-mono);
+    font-size: 1.4rem;
+    color: var(--text-bright);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+.brand:hover {
+    background: transparent;
+    color: var(--accent);
+}
+
+.brand .bracket {
+    color: var(--accent);
+}
+
+.nav-links {
+    display: flex;
+    gap: var(--space-4);
+    font-family: var(--font-mono);
+    font-size: 1.15rem;
+}
+
+.nav-links a {
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: var(--space-1) var(--space-2);
+    border: 1px solid transparent;
+    transition: all 0.15s ease;
+}
+
+.nav-links a:hover {
+    color: var(--bg);
+    background: var(--text);
+    border-color: var(--text);
+}
+
+.nav-links a.active {
+    color: var(--accent);
+    border-color: var(--border-bright);
+}
+
+
+/* -----------------------------------------------------------------
+   7. Hero (Cipher-style massive heading)
+   ----------------------------------------------------------------- */
+.hero {
+    padding: var(--space-7) 0 var(--space-6);
+    position: relative;
+}
+
+.hero-label {
+    font-family: var(--font-mono);
+    font-size: 1.2rem;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: var(--space-3);
+}
+
+.hero-label::before {
+    content: "// ";
+    color: var(--accent);
+}
+
+.hero-title {
+    font-family: var(--font-display);
+    font-size: clamp(3rem, 11vw, 8.5rem);
+    line-height: 0.9;
+    text-transform: uppercase;
+    color: var(--text-bright);
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    margin-bottom: var(--space-4);
+}
+
+.hero-title .accent {
+    color: var(--accent);
+}
+
+.hero-tagline {
+    font-family: var(--font-mono);
+    font-size: clamp(1rem, 1.6vw, 1.4rem);
+    color: var(--text);
+    max-width: 60ch;
+    margin-bottom: var(--space-5);
+}
+
+.hero-cta {
+    display: flex;
+    gap: var(--space-3);
+    flex-wrap: wrap;
+}
+
+
+/* -----------------------------------------------------------------
+   8. Section label "/ TITLE"
+   ----------------------------------------------------------------- */
+.section-label {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 1.1rem;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    margin-bottom: var(--space-2);
+}
+
+.section-label::before {
+    content: "/ ";
+    color: var(--accent);
+    margin-right: 0.2em;
+}
+
+.section-title {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    text-transform: uppercase;
+    color: var(--text-bright);
+    line-height: 1;
+    margin-bottom: var(--space-5);
+    letter-spacing: -0.03em;
+}
+
+
+/* -----------------------------------------------------------------
+   9. Cards
+   ----------------------------------------------------------------- */
+.cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 0;
+    border: 1px solid var(--border);
+}
+
+.card {
+    padding: var(--space-4);
+    border-right: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    background: var(--bg-surface);
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.card:last-child {
+    border-right: 1px solid var(--border);
+}
+
+.card:hover {
+    background: var(--bg-elev);
+    color: var(--text-bright);
+}
+
+.card-icon {
+    font-family: var(--font-mono);
+    color: var(--accent);
+    font-size: 1.2rem;
+    margin-bottom: var(--space-2);
+}
+
+.card-title {
+    font-family: var(--font-display);
+    font-size: 1.3rem;
+    color: var(--text-bright);
+    text-transform: uppercase;
+    margin-bottom: var(--space-2);
+    letter-spacing: 0.02em;
+}
+
+.card-text {
+    font-size: 0.92rem;
+    color: var(--text);
+    line-height: 1.5;
+}
+
+.card-meta {
+    margin-top: var(--space-3);
+    font-family: var(--font-mono);
+    font-size: 0.95rem;
+    color: var(--text-dim);
+    display: flex;
+    gap: var(--space-3);
+    flex-wrap: wrap;
+}
+
+.card-links {
+    margin-top: var(--space-3);
+    display: flex;
+    gap: var(--space-3);
+    font-family: var(--font-mono);
+    font-size: 1rem;
+}
+
+
+/* -----------------------------------------------------------------
+   10. Tables (REGISTER CONTROL style)
+   ----------------------------------------------------------------- */
+.terminal-table {
+    font-family: var(--font-mono);
+    font-size: 1.05rem;
+    border: 1px solid var(--border);
+    background: var(--bg-surface);
+    margin-bottom: var(--space-5);
+}
+
+.terminal-table-header {
+    background: var(--bg-elev);
+    border-bottom: 1px solid var(--border-bright);
+    padding: var(--space-2) var(--space-3);
+    color: var(--text-bright);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    text-align: center;
+    font-size: 1.1rem;
+}
+
+.terminal-table table {
+    width: 100%;
+}
+
+.terminal-table th {
+    text-align: left;
+    padding: var(--space-2) var(--space-3);
+    border-bottom: 1px solid var(--border);
+    color: var(--text-bright);
+    font-weight: normal;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-size: 1rem;
+    background: var(--bg-elev);
+}
+
+.terminal-table td {
+    padding: var(--space-2) var(--space-3);
+    border-bottom: 1px dotted var(--border);
+    color: var(--text);
+    vertical-align: top;
+}
+
+.terminal-table tr:last-child td {
+    border-bottom: none;
+}
+
+.terminal-table tr:hover td {
+    background: var(--bg-elev);
+    color: var(--text-bright);
+}
+
+.terminal-table .col-id {
+    color: var(--text-dim);
+    width: 3rem;
+}
+
+.terminal-table .col-status {
+    color: var(--accent);
+    text-transform: uppercase;
+}
+
+
+/* -----------------------------------------------------------------
+   11. Buttons
+   ----------------------------------------------------------------- */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-family: var(--font-mono);
+    font-size: 1.1rem;
+    padding: var(--space-2) var(--space-4);
+    border: 1px solid var(--text);
+    color: var(--text);
+    background: transparent;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    transition: all 0.15s ease;
+}
+
+.btn:hover {
+    background: var(--text);
+    color: var(--bg);
+}
+
+.btn--primary {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--bg);
+}
+
+.btn--primary:hover {
+    background: var(--text-bright);
+    border-color: var(--text-bright);
+    color: var(--bg);
+}
+
+.btn--ghost {
+    border-color: var(--border-bright);
+    color: var(--text-dim);
+}
+
+.btn--ghost:hover {
+    background: var(--bg-elev);
+    color: var(--text-bright);
+    border-color: var(--text);
+}
+
+
+/* -----------------------------------------------------------------
+   12. Marquee (ticker at bottom of sections — Cipher style)
+   ----------------------------------------------------------------- */
+.marquee {
+    overflow: hidden;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    background: var(--bg-surface);
+    padding: var(--space-3) 0;
+}
+
+.marquee-track {
+    display: inline-flex;
+    gap: var(--space-5);
+    white-space: nowrap;
+    animation: scroll 40s linear infinite;
+    font-family: var(--font-mono);
+    font-size: 1.4rem;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.marquee-track span::before {
+    content: "■ ";
+    color: var(--accent);
+    margin-right: 0.5em;
+}
+
+@keyframes scroll {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+}
+
+
+/* -----------------------------------------------------------------
+   13. Footer
+   ----------------------------------------------------------------- */
+.footer {
+    border-top: 1px solid var(--border);
+    padding: var(--space-5) 0 var(--space-4);
+    margin-top: var(--space-6);
+    font-family: var(--font-mono);
+    font-size: 1rem;
+    color: var(--text-dim);
+}
+
+.footer-inner {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+}
+
+.footer a {
+    color: var(--text);
+}
+
+
+/* -----------------------------------------------------------------
+   14. Scanline overlay (CRT-style decoration)
+   ----------------------------------------------------------------- */
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    z-index: 999;
+    background: repeating-linear-gradient(
+        0deg,
+        rgba(0, 0, 0, 0) 0,
+        rgba(0, 0, 0, 0) 2px,
+        rgba(0, 0, 0, 0.15) 3px,
+        rgba(0, 0, 0, 0.15) 3px
+    );
+    mix-blend-mode: multiply;
+}
+
+
+/* -----------------------------------------------------------------
+   15. Utilities
+   ----------------------------------------------------------------- */
+.mono     { font-family: var(--font-mono); }
+.dim      { color: var(--text-dim); }
+.bright   { color: var(--text-bright); }
+.accent   { color: var(--accent); }
+.uppercase{ text-transform: uppercase; letter-spacing: 0.05em; }
+
+.divider-ascii {
+    font-family: var(--font-mono);
+    color: var(--border-bright);
+    margin: var(--space-5) 0;
+    user-select: none;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.tag-list {
+    display: flex;
+    gap: var(--space-2);
+    flex-wrap: wrap;
+    margin-top: var(--space-3);
+}
+
+.tag {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 0.95rem;
+    padding: var(--space-1) var(--space-2);
+    border: 1px solid var(--border-bright);
+    color: var(--text);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.big-statement {
+    font-family: var(--font-display);
+    font-size: clamp(1.8rem, 4.5vw, 3rem);
+    line-height: 1.1;
+    text-transform: uppercase;
+    color: var(--text-bright);
+    max-width: 22ch;
+    margin: var(--space-6) 0;
+    letter-spacing: -0.02em;
+}
+
+.big-statement .accent {
+    color: var(--accent);
+}
+
+.two-col {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: var(--space-5);
+    align-items: start;
+}
+
+.info-block {
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    padding: var(--space-4);
+}
+
+.info-block-header {
+    font-family: var(--font-mono);
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: var(--space-3);
+    border-bottom: 1px solid var(--border);
+    padding-bottom: var(--space-2);
+}
+
+.info-block ul {
+    font-family: var(--font-mono);
+    line-height: 2;
+}
+
+.info-block ul li::before {
+    content: "> ";
+    color: var(--accent);
+}
+
+
+/* -----------------------------------------------------------------
+   Responsive
+   ----------------------------------------------------------------- */
+@media (max-width: 720px) {
+    .statusbar {
+        font-size: 0.9rem;
+        height: auto;
+        padding: var(--space-1) 0;
+    }
+    .statusbar-inner {
+        flex-wrap: wrap;
+        gap: var(--space-2);
+    }
+    .statusbar-cell:nth-child(3) {
+        display: none;
+    }
+
+    .nav-inner {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--space-3);
+    }
+    .nav-links {
+        flex-wrap: wrap;
+        gap: var(--space-2);
+        font-size: 1rem;
+    }
+
+    .hero {
+        padding: var(--space-5) 0 var(--space-4);
+    }
+    .two-col {
+        grid-template-columns: 1fr;
+    }
+}

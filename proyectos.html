@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PROYECTOS / MATEO IGUA</title>
+    <meta name="description" content="Proyectos personales de Mateo Igua: prácticas en C# y .NET." />
+
+    <link rel="icon" type="image/png" href="favicon.png" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=VT323&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+
+    <link rel="stylesheet" href="assets/css/reset.css" />
+    <link rel="stylesheet" href="assets/css/main.css" />
+</head>
+<body>
+
+    <!-- STATUS BAR -->
+    <header class="statusbar">
+        <div class="container statusbar-inner">
+            <div class="statusbar-cell"><span class="label">INDEX:</span> <span class="value">MATEO.IGUA</span></div>
+            <div class="statusbar-cell"><span class="label">COMMAND:</span> <span class="value value--accent">LIST PROJECTS<span class="cursor"></span></span></div>
+            <div class="statusbar-cell"><span class="label">TIME:</span> <span class="value" id="clock">--:--:--</span></div>
+            <div class="statusbar-cell"><span class="label">*** PAGE 2 READY ***</span></div>
+        </div>
+    </header>
+
+    <!-- NAV -->
+    <nav class="nav">
+        <div class="container nav-inner">
+            <a href="index.html" class="brand"><span class="bracket">[</span>MI<span class="bracket">]</span></a>
+            <ul class="nav-links">
+                <li><a href="index.html">HOME</a></li>
+                <li><a href="proyectos.html" class="active">PROYECTOS</a></li>
+                <li><a href="experimentos.html">EXPERIMENTOS</a></li>
+                <li><a href="sobre-mi.html">SOBRE MÍ</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero">
+        <div class="container">
+            <p class="hero-label">REGISTRO DE PROYECTOS</p>
+            <h1 class="hero-title">
+                PROYEC<br />
+                TOS<span class="accent">.</span>
+            </h1>
+            <p class="hero-tagline">
+                Cosas que he construido mientras aprendo. Cada uno fue
+                un experimento con un objetivo claro: entender un
+                concepto, practicar un patrón, o simplemente hacer algo útil.
+            </p>
+        </div>
+    </section>
+
+    <!-- TABLA TERMINAL ============ -->
+    <section class="section">
+        <div class="container">
+            <p class="section-label">REGISTRO</p>
+            <h2 class="section-title">TABLA DE CONTROL</h2>
+
+            <div class="terminal-table">
+                <div class="terminal-table-header">PROJECT REGISTRY · 04 ENTRIES</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th class="col-id">ID</th>
+                            <th>NAME</th>
+                            <th>STACK</th>
+                            <th>YEAR</th>
+                            <th class="col-status">STATUS</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="col-id">A</td>
+                            <td>Servidor de Cotización</td>
+                            <td>C# · ASP.NET CORE</td>
+                            <td>2025</td>
+                            <td class="col-status">ACTIVO</td>
+                        </tr>
+                        <tr>
+                            <td class="col-id">B</td>
+                            <td>Práctica Refactor</td>
+                            <td>C# · SOLID</td>
+                            <td>2025</td>
+                            <td class="col-status">ACTIVO</td>
+                        </tr>
+                        <tr>
+                            <td class="col-id">C</td>
+                            <td>Sistema Parqueadero</td>
+                            <td>C# · OOP</td>
+                            <td>2024</td>
+                            <td class="col-status">ARCHIVO</td>
+                        </tr>
+                        <tr>
+                            <td class="col-id">D</td>
+                            <td>Logs Pruebas</td>
+                            <td>C# · CONSOLA</td>
+                            <td>2024</td>
+                            <td class="col-status">ARCHIVO</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- CARDS DETALLADAS ============ -->
+    <section class="section">
+        <div class="container">
+            <p class="section-label">DETALLE</p>
+            <h2 class="section-title">FICHAS</h2>
+
+            <div class="cards-grid">
+                <article class="card">
+                    <p class="card-icon">[A] · 2025</p>
+                    <h3 class="card-title">SERVIDOR DE COTIZACIÓN</h3>
+                    <p class="card-text">
+                        Servicio backend en C# para gestionar cotizaciones,
+                        con persistencia y endpoints REST. Práctica de
+                        arquitectura por capas y separación de responsabilidades.
+                    </p>
+                    <div class="card-meta">
+                        <span>C#</span>
+                        <span>·</span>
+                        <span>ASP.NET CORE</span>
+                        <span>·</span>
+                        <span>REST</span>
+                    </div>
+                    <div class="card-links">
+                        <a href="https://github.com/MateoIgua" target="_blank" rel="noopener">→ CÓDIGO</a>
+                    </div>
+                </article>
+
+                <article class="card">
+                    <p class="card-icon">[B] · 2025</p>
+                    <h3 class="card-title">PRÁCTICA REFACTOR</h3>
+                    <p class="card-text">
+                        Ejercicios de refactorización aplicando principios
+                        SOLID y patrones de diseño sobre código legado.
+                        Foco en testabilidad y nombrado.
+                    </p>
+                    <div class="card-meta">
+                        <span>C#</span>
+                        <span>·</span>
+                        <span>SOLID</span>
+                        <span>·</span>
+                        <span>PATRONES</span>
+                    </div>
+                    <div class="card-links">
+                        <a href="https://github.com/MateoIgua" target="_blank" rel="noopener">→ CÓDIGO</a>
+                    </div>
+                </article>
+
+                <article class="card">
+                    <p class="card-icon">[C] · 2024</p>
+                    <h3 class="card-title">SISTEMA PARQUEADERO</h3>
+                    <p class="card-text">
+                        Aplicación de consola para gestionar ingreso y salida
+                        de vehículos en un parqueadero, calculando tarifas
+                        por tiempo. Práctica de OOP clásico.
+                    </p>
+                    <div class="card-meta">
+                        <span>C#</span>
+                        <span>·</span>
+                        <span>CONSOLA</span>
+                        <span>·</span>
+                        <span>OOP</span>
+                    </div>
+                    <div class="card-links">
+                        <a href="https://github.com/MateoIgua" target="_blank" rel="noopener">→ CÓDIGO</a>
+                    </div>
+                </article>
+
+                <article class="card">
+                    <p class="card-icon">[D] · 2024</p>
+                    <h3 class="card-title">LOGS PRUEBAS</h3>
+                    <p class="card-text">
+                        Sandbox de pruebas y experimentos cortos con C#.
+                        Notas y snippets para no perder lo aprendido en
+                        ejercicios sueltos.
+                    </p>
+                    <div class="card-meta">
+                        <span>C#</span>
+                        <span>·</span>
+                        <span>SANDBOX</span>
+                    </div>
+                    <div class="card-links">
+                        <a href="https://github.com/MateoIgua" target="_blank" rel="noopener">→ CÓDIGO</a>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- BIG STATEMENT -->
+    <section class="section">
+        <div class="container">
+            <h2 class="big-statement">
+                CADA PROYECTO RESPONDE
+                A UNA <span class="accent">PREGUNTA</span>.
+            </h2>
+        </div>
+    </section>
+
+    <!-- MARQUEE -->
+    <div class="marquee">
+        <div class="marquee-track">
+            <span>C#</span><span>.NET</span><span>BLAZOR</span><span>SQL</span><span>EF CORE</span>
+            <span>SOLID</span><span>OOP</span><span>REFACTORING</span><span>GIT</span><span>VISUAL STUDIO</span>
+            <span>C#</span><span>.NET</span><span>BLAZOR</span><span>SQL</span><span>EF CORE</span>
+            <span>SOLID</span><span>OOP</span><span>REFACTORING</span><span>GIT</span><span>VISUAL STUDIO</span>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="container footer-inner">
+            <span>&copy; 2026 MATEO IGUA · BUILT WITH HTML &amp; CSS</span>
+            <span>v2.0 · LAST UPDATE 2026-05-28</span>
+        </div>
+    </footer>
+
+    <script src="assets/js/main.js"></script>
+</body>
+</html>

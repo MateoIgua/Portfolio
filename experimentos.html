@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EXPERIMENTOS / MATEO IGUA</title>
+    <meta name="description" content="Experimentos y prácticas cortas de Mateo Igua." />
+
+    <link rel="icon" type="image/png" href="favicon.png" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=VT323&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+
+    <link rel="stylesheet" href="assets/css/reset.css" />
+    <link rel="stylesheet" href="assets/css/main.css" />
+</head>
+<body>
+
+    <!-- STATUS BAR -->
+    <header class="statusbar">
+        <div class="container statusbar-inner">
+            <div class="statusbar-cell"><span class="label">INDEX:</span> <span class="value">MATEO.IGUA</span></div>
+            <div class="statusbar-cell"><span class="label">COMMAND:</span> <span class="value value--accent">EXEC LAB<span class="cursor"></span></span></div>
+            <div class="statusbar-cell"><span class="label">TIME:</span> <span class="value" id="clock">--:--:--</span></div>
+            <div class="statusbar-cell"><span class="label">*** PAGE 3 READY ***</span></div>
+        </div>
+    </header>
+
+    <!-- NAV -->
+    <nav class="nav">
+        <div class="container nav-inner">
+            <a href="index.html" class="brand"><span class="bracket">[</span>MI<span class="bracket">]</span></a>
+            <ul class="nav-links">
+                <li><a href="index.html">HOME</a></li>
+                <li><a href="proyectos.html">PROYECTOS</a></li>
+                <li><a href="experimentos.html" class="active">EXPERIMENTOS</a></li>
+                <li><a href="sobre-mi.html">SOBRE MÍ</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero">
+        <div class="container">
+            <p class="hero-label">LAB · PIEZAS CORTAS</p>
+            <h1 class="hero-title">
+                EXPERI<br />
+                MENTOS<span class="accent">.</span>
+            </h1>
+            <p class="hero-tagline">
+                Pruebas chicas, snippets, ejercicios y exploraciones.
+                Lugar donde aterrizan ideas antes de ser "proyectos" hechos
+                y derechos. Aquí lo que importa es probar, no terminar.
+            </p>
+        </div>
+    </section>
+
+    <!-- GRID DE EXPERIMENTOS -->
+    <section class="section">
+        <div class="container">
+            <p class="section-label">REGISTRO</p>
+            <h2 class="section-title">LAB · LOG</h2>
+
+            <div class="cards-grid">
+                <article class="card">
+                    <p class="card-icon">EXP-001</p>
+                    <h3 class="card-title">PATTERN OBSERVER</h3>
+                    <p class="card-text">
+                        Implementación mínima del patrón Observer en C# sin librerías
+                        externas. Notas sobre cuándo conviene y cuándo no.
+                    </p>
+                    <div class="card-meta">
+                        <span>C#</span>
+                        <span>·</span>
+                        <span>PATRONES</span>
+                    </div>
+                </article>
+
+                <article class="card">
+                    <p class="card-icon">EXP-002</p>
+                    <h3 class="card-title">LINQ DEEP DIVE</h3>
+                    <p class="card-text">
+                        Comparación entre query syntax y method syntax.
+                        Performance y legibilidad en consultas grandes.
+                    </p>
+                    <div class="card-meta">
+                        <span>C#</span>
+                        <span>·</span>
+                        <span>LINQ</span>
+                    </div>
+                </article>
+
+                <article class="card">
+                    <p class="card-icon">EXP-003</p>
+                    <h3 class="card-title">ASYNC / AWAIT</h3>
+                    <p class="card-text">
+                        Mini playground de tareas concurrentes en C#.
+                        Errores comunes con deadlocks y CancellationToken.
+                    </p>
+                    <div class="card-meta">
+                        <span>C#</span>
+                        <span>·</span>
+                        <span>ASYNC</span>
+                    </div>
+                </article>
+
+                <article class="card">
+                    <p class="card-icon">EXP-004</p>
+                    <h3 class="card-title">CSV PARSER</h3>
+                    <p class="card-text">
+                        Lector de CSV desde cero, sin librerías. Manejo de
+                        comillas, escapes y archivos grandes con streaming.
+                    </p>
+                    <div class="card-meta">
+                        <span>C#</span>
+                        <span>·</span>
+                        <span>I/O</span>
+                    </div>
+                </article>
+
+                <article class="card">
+                    <p class="card-icon">EXP-005</p>
+                    <h3 class="card-title">TERMINAL UI</h3>
+                    <p class="card-text">
+                        Menús interactivos en consola con flechas y colores.
+                        Práctica con Console.ReadKey y ANSI escapes.
+                    </p>
+                    <div class="card-meta">
+                        <span>C#</span>
+                        <span>·</span>
+                        <span>CONSOLA</span>
+                    </div>
+                </article>
+
+                <article class="card">
+                    <p class="card-icon">EXP-006</p>
+                    <h3 class="card-title">REGEX TOOLKIT</h3>
+                    <p class="card-text">
+                        Colección de regex prácticas para email, URL, fechas.
+                        Cada una con casos de prueba y notas de los gotchas.
+                    </p>
+                    <div class="card-meta">
+                        <span>C#</span>
+                        <span>·</span>
+                        <span>REGEX</span>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- BIG STATEMENT -->
+    <section class="section">
+        <div class="container">
+            <h2 class="big-statement">
+                APRENDER ES <span class="accent">EXPERIMENTAR</span>
+                Y DOCUMENTAR.
+            </h2>
+        </div>
+    </section>
+
+    <!-- DISCLAIMER -->
+    <section class="section">
+        <div class="container two-col">
+            <div>
+                <p class="section-label">LEYENDA</p>
+                <h2 class="section-title">QUÉ ES ESTO</h2>
+                <p style="max-width:60ch;">
+                    Estos experimentos son ejercicios cortos — algunos
+                    completos, otros a medio terminar. Sirven para
+                    fijar conceptos y tener material de referencia
+                    para futuros proyectos.
+                </p>
+            </div>
+
+            <div class="info-block">
+                <p class="info-block-header">STATUS</p>
+                <ul>
+                    <li>06 entradas</li>
+                    <li>Auto-publicados</li>
+                    <li>Sin garantía</li>
+                    <li>Open source</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- MARQUEE -->
+    <div class="marquee">
+        <div class="marquee-track">
+            <span>EXPERIMENT</span><span>BUILD</span><span>LEARN</span><span>BREAK</span><span>FIX</span>
+            <span>REPEAT</span><span>NOTE</span><span>SHIP</span><span>REVIEW</span><span>ITERATE</span>
+            <span>EXPERIMENT</span><span>BUILD</span><span>LEARN</span><span>BREAK</span><span>FIX</span>
+            <span>REPEAT</span><span>NOTE</span><span>SHIP</span><span>REVIEW</span><span>ITERATE</span>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="container footer-inner">
+            <span>&copy; 2026 MATEO IGUA · BUILT WITH HTML &amp; CSS</span>
+            <span>v2.0 · LAST UPDATE 2026-05-28</span>
+        </div>
+    </footer>
+
+    <script src="assets/js/main.js"></script>
+</body>
+</html>

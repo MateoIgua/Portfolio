@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MATEO IGUA / DEV TERMINAL</title>
+    <meta name="description" content="Portafolio de Mateo Igua — desarrollador .NET / C#. Proyectos, experimentos y notas." />
+
+    <link rel="icon" type="image/png" href="favicon.png" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=VT323&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+
+    <link rel="stylesheet" href="assets/css/reset.css" />
+    <link rel="stylesheet" href="assets/css/main.css" />
+</head>
+<body>
+
+    <!-- ============ STATUS BAR (AS400) ============ -->
+    <header class="statusbar">
+        <div class="container statusbar-inner">
+            <div class="statusbar-cell">
+                <span class="label">INDEX:</span>
+                <span class="value">MATEO.IGUA</span>
+            </div>
+            <div class="statusbar-cell">
+                <span class="label">COMMAND:</span>
+                <span class="value value--accent">RUN HOME<span class="cursor"></span></span>
+            </div>
+            <div class="statusbar-cell">
+                <span class="label">TIME:</span>
+                <span class="value" id="clock">--:--:--</span>
+            </div>
+            <div class="statusbar-cell">
+                <span class="label">*** PAGE 1 READY ***</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- ============ NAV ============ -->
+    <nav class="nav">
+        <div class="container nav-inner">
+            <a href="index.html" class="brand">
+                <span class="bracket">[</span>MI<span class="bracket">]</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html" class="active">HOME</a></li>
+                <li><a href="proyectos.html">PROYECTOS</a></li>
+                <li><a href="experimentos.html">EXPERIMENTOS</a></li>
+                <li><a href="sobre-mi.html">SOBRE MÍ</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- ============ HERO ============ -->
+    <section class="hero">
+        <div class="container">
+            <p class="hero-label">DEVELOPER · .NET / C#</p>
+            <h1 class="hero-title">
+                MATEO<br />
+                IGUA<span class="accent">.</span>
+            </h1>
+            <p class="hero-tagline">
+                Construyo backend y herramientas con C# y .NET.
+                Práctico arquitectura limpia, refactorización y
+                automatización. Acá vive lo que voy aprendiendo.
+            </p>
+            <div class="hero-cta">
+                <a href="proyectos.html" class="btn btn--primary">VER PROYECTOS →</a>
+                <a href="sobre-mi.html" class="btn btn--ghost">SOBRE MÍ</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ STACK / SERVICIOS (cards estilo Cipher) ============ -->
+    <section class="section">
+        <div class="container">
+            <p class="section-label">STACK</p>
+            <h2 class="section-title">EN QUÉ TRABAJO</h2>
+
+            <div class="cards-grid">
+                <article class="card">
+                    <p class="card-icon">[01]</p>
+                    <h3 class="card-title">BACKEND</h3>
+                    <p class="card-text">
+                        Servicios y APIs en ASP.NET Core, lógica de dominio en
+                        C#, persistencia con EF Core sobre SQL Server o PostgreSQL.
+                    </p>
+                </article>
+                <article class="card">
+                    <p class="card-icon">[02]</p>
+                    <h3 class="card-title">CONSOLA / CLI</h3>
+                    <p class="card-text">
+                        Programas de consola en .NET para automatizar tareas,
+                        procesar archivos o resolver problemas con OOP clásico.
+                    </p>
+                </article>
+                <article class="card">
+                    <p class="card-icon">[03]</p>
+                    <h3 class="card-title">DATOS</h3>
+                    <p class="card-text">
+                        Modelado de bases de datos relacionales, queries SQL,
+                        LINQ y patrones repositorio + Unit of Work.
+                    </p>
+                </article>
+                <article class="card">
+                    <p class="card-icon">[04]</p>
+                    <h3 class="card-title">REFACTORING</h3>
+                    <p class="card-text">
+                        Aplicación de principios SOLID y patrones de diseño
+                        para llevar código legado a algo testeable y mantenible.
+                    </p>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ BIG STATEMENT ============ -->
+    <section class="section">
+        <div class="container">
+            <h2 class="big-statement">
+                EL CÓDIGO LIMPIO NO ES UN DESTINO,
+                ES UNA <span class="accent">PRÁCTICA DIARIA</span>.
+            </h2>
+        </div>
+    </section>
+
+    <!-- ============ NOW BLOCK ============ -->
+    <section class="section">
+        <div class="container two-col">
+            <div>
+                <p class="section-label">AHORA</p>
+                <h2 class="section-title">EN QUÉ ESTOY</h2>
+                <p style="max-width:60ch;">
+                    Construyendo este portafolio en HTML/CSS puros para
+                    consolidar lo que sé de frontend antes de volver al
+                    backend. Después: meter Blazor de nuevo pero con
+                    mejor entendimiento de DOM y CSS.
+                </p>
+                <div class="tag-list">
+                    <span class="tag">C#</span>
+                    <span class="tag">.NET 10</span>
+                    <span class="tag">SOLID</span>
+                    <span class="tag">EF Core</span>
+                    <span class="tag">Refactor</span>
+                </div>
+            </div>
+
+            <div class="info-block">
+                <p class="info-block-header">STATUS</p>
+                <ul>
+                    <li>Activo en GitHub</li>
+                    <li>Abierto a colaborar</li>
+                    <li>Aprendiendo Blazor</li>
+                    <li>Construyendo proyectos</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ MARQUEE ============ -->
+    <div class="marquee">
+        <div class="marquee-track">
+            <span>C#</span><span>.NET</span><span>BLAZOR</span><span>SQL</span><span>EF CORE</span>
+            <span>SOLID</span><span>OOP</span><span>REFACTORING</span><span>GIT</span><span>VISUAL STUDIO</span>
+            <span>C#</span><span>.NET</span><span>BLAZOR</span><span>SQL</span><span>EF CORE</span>
+            <span>SOLID</span><span>OOP</span><span>REFACTORING</span><span>GIT</span><span>VISUAL STUDIO</span>
+        </div>
+    </div>
+
+    <!-- ============ FOOTER ============ -->
+    <footer class="footer">
+        <div class="container footer-inner">
+            <span>&copy; 2026 MATEO IGUA · BUILT WITH HTML &amp; CSS</span>
+            <span>v2.0 · LAST UPDATE 2026-05-28</span>
+        </div>
+    </footer>
+
+    <script src="assets/js/main.js"></script>
+</body>
+</html>
