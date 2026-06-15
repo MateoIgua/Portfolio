@@ -1,8 +1,11 @@
-name: Deploy static site to GitHub Pages
+name: Deploy frontend to GitHub Pages
 
 on:
   push:
     branches: [master]
+    paths:
+      - 'frontend/**'
+      - '.github/workflows/deploy.yml'
   workflow_dispatch:
 
 permissions:
@@ -24,21 +27,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Stage site folder
-        # We assemble exactly what should be served, so the .github folder
-        # and other repo metadata don't end up published.
-        run: |
-          mkdir -p _site
-          cp -r index.html proyectos.html experimentos.html sobre-mi.html 404.html favicon.png _site/
-          cp -r assets _site/
-
       - name: Configure Pages
         uses: actions/configure-pages@v5
 
-      - name: Upload artifact
+      - name: Upload artifact (frontend folder only)
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./_site
+          path: ./frontend
 
       - name: Deploy to GitHub Pages
         id: deployment

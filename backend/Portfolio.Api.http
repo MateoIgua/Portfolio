@@ -1,0 +1,9 @@
+@Portfolio.Api_HostAddress = http://localhost:5050
+
+### Hello base
+GET {{Portfolio.Api_HostAddress}}/api/hello
+Accept: application/json
+
+### Hora del servidor
+GET {{Portfolio.Api_HostAddress}}/api/hello/now
+Accept: application/json

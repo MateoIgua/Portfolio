@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>WIDGET DEMO / MATEO IGUA</title>
+    <meta name="description" content="Demo de integración frontend ↔ backend (Portfolio.Api)." />
+
+    <link rel="icon" type="image/png" href="favicon.png" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=VT323&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+
+    <link rel="stylesheet" href="assets/css/reset.css" />
+    <link rel="stylesheet" href="assets/css/main.css" />
+</head>
+<body>
+
+    <header class="statusbar">
+        <div class="container statusbar-inner">
+            <div class="statusbar-cell">
+                <span class="label">cd:</span>
+                <span class="value">~/Widget-Demo</span>
+                <span class="cursor"></span>
+            </div>
+            <div class="statusbar-cell">
+                <span class="label">TIME:</span>
+                <span class="value" id="clock">--:--:--</span>
+            </div>
+            <div class="statusbar-cell">
+                <span class="label">*** API TEST ***</span>
+            </div>
+        </div>
+    </header>
+
+    <nav class="nav">
+        <div class="container nav-inner">
+            <a href="index.html" class="brand"><span class="bracket">[</span>MI<span class="bracket">]</span></a>
+            <ul class="nav-links">
+                <li><a href="index.html">HOME</a></li>
+                <li><a href="proyectos.html">PROYECTOS</a></li>
+                <li><a href="experimentos.html">EXPERIMENTOS</a></li>
+                <li><a href="sobre-mi.html">SOBRE MÍ</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="container">
+            <p class="hero-label">FRONTEND ↔ BACKEND</p>
+            <h1 class="hero-title">
+                WIDGET<br />
+                DEMO<span class="accent">.</span>
+            </h1>
+            <p class="hero-tagline">
+                Esta página llama al backend (Portfolio.Api en
+                <code>http://localhost:5050</code>) y muestra la respuesta.
+                Si ves los recuadros con datos abajo, la integración funciona.
+            </p>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <p class="section-label">RESPUESTAS DE LA API</p>
+            <h2 class="section-title">/api/hello</h2>
+
+            <div class="info-block" style="margin-bottom: 2rem;">
+                <p class="info-block-header" id="hello-status">CARGANDO...</p>
+                <pre id="hello-data" style="overflow-x:auto; color:var(--text-bright); font-size:1.1rem;">
+[esperando respuesta del servidor]</pre>
+            </div>
+
+            <h2 class="section-title">/api/hello/now</h2>
+            <div class="info-block">
+                <p class="info-block-header" id="now-status">CARGANDO...</p>
+                <pre id="now-data" style="overflow-x:auto; color:var(--text-bright); font-size:1.1rem;">
+[esperando respuesta del servidor]</pre>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <p class="section-label">CÓMO REUSAR</p>
+            <h2 class="section-title">PATRÓN</h2>
+            <p style="max-width:60ch; margin-bottom: 1rem;">
+                Mirá el código fuente de esta página + <code>assets/js/api-client.js</code>.
+                Para crear tus propios widgets:
+            </p>
+            <ol style="max-width:60ch; padding-left:1.5rem; list-style: decimal;">
+                <li>Agregá un endpoint en <code>backend/Controllers/</code></li>
+                <li>Exponé un wrapper en <code>api-client.js</code></li>
+                <li>En tu HTML, agregá un contenedor con id único</li>
+                <li>Cargás <code>api-client.js</code> + un script que llene el contenedor</li>
+            </ol>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container footer-inner">
+            <span>&copy; 2026 MATEO IGUA · BUILT WITH HTML &amp; CSS</span>
+            <span>v2.0</span>
+        </div>
+    </footer>
+
+    <script src="assets/js/main.js"></script>
+    <script src="assets/js/api-client.js"></script>
+    <script>
+        // ===============================================================
+        // Demo: llamamos a ambos endpoints y volcamos el JSON en <pre>.
+        // ===============================================================
+
+        async function loadHello() {
+            const statusEl = document.getElementById('hello-status');
+            const dataEl   = document.getElementById('hello-data');
+            try {
+                const data = await getHello();
+                statusEl.textContent = '✓ 200 OK';
+                statusEl.style.color = 'var(--text-bright)';
+                dataEl.textContent = JSON.stringify(data, null, 2);
+            } catch (err) {
+                statusEl.textContent = '✗ ERROR';
+                statusEl.style.color = 'var(--error)';
+                dataEl.textContent = err.message
+                    + '\n\nVerificá que el backend esté corriendo en localhost:5050';
+            }
+        }
+
+        async function loadNow() {
+            const statusEl = document.getElementById('now-status');
+            const dataEl   = document.getElementById('now-data');
+            try {
+                const data = await getServerTime();
+                statusEl.textContent = '✓ 200 OK';
+                statusEl.style.color = 'var(--text-bright)';
+                dataEl.textContent = JSON.stringify(data, null, 2);
+            } catch (err) {
+                statusEl.textContent = '✗ ERROR';
+                statusEl.style.color = 'var(--error)';
+                dataEl.textContent = err.message;
+            }
+        }
+
+        loadHello();
+        loadNow();
+    </script>
+</body>
+</html>
