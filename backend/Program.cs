@@ -28,6 +28,7 @@ builder.Services.AddCors(options =>
                 "https://mateoigua.github.io",  // producción (GitHub Pages)
                 "http://localhost:8080",         // live-server por defecto
                 "http://127.0.0.1:8080",
+                "http://localhost:4200",         // Angular (ng serve)
                 "http://localhost:5099",         // por si usás python http.server
                 "http://127.0.0.1:5099"
             )
