@@ -7,5 +7,5 @@ export const API_BASE = new InjectionToken<string>('API_BASE', {
   factory: () =>
     location.hostname === 'localhost' || location.hostname === '127.0.0.1'
       ? 'http://localhost:5050'
-      : 'https://TU-BACKEND-EN-PRODUCCION.com', // ⚠️ actualizar cuando tengas servidor
+      : 'https://www.mateoigua.com', // ⚠️ actualizar cuando tengas servidor
 });
