@@ -1,9 +1,9 @@
 # Aprender Angular con este portafolio
 
 Guía de estudio. Cada concepto se explica con código **real de este proyecto**, comparándolo con
-cómo se hacía en el HTML original (`frontend/`). Ábrelos lado a lado.
+cómo se hacía en el HTML original (`frontend-html/`). Ábrelos lado a lado.
 
-Para ejecutar: `cd frontend-angular && npm install && npm start` → http://localhost:4200.
+Para ejecutar: `cd frontend && npm install && npm start` → http://localhost:4200.
 Con el servidor corriendo, cada cambio que guardes se refleja al instante.
 
 ## Ruta de lectura sugerida
