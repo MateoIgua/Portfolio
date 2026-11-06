@@ -15,6 +15,7 @@ Es un monorepo con tres piezas:
 ## Documentación
 
 - [docs/ARQUITECTURA.md](docs/ARQUITECTURA.md) — cómo está armado todo el portafolio (frontend, backend, CORS, despliegue).
+- [docs/DESPLIEGUE-AZURE.md](docs/DESPLIEGUE-AZURE.md) — cómo publicar frontend + API + base de datos en Azure.
 - [docs/APRENDER-ANGULAR.md](docs/APRENDER-ANGULAR.md) — guía de estudio: cada concepto de Angular explicado con el código real de este proyecto, y ejercicios.
 
 ## Cómo ejecutarlo

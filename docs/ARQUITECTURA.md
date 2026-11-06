@@ -99,6 +99,9 @@ Si cambias de puerto o publicas en otro dominio, agrégalo ahí.
 
 ## Despliegue
 
+**Plan elegido: Azure** (Static Web Apps + App Service + Azure SQL cuando haya datos). Guía completa en
+[DESPLIEGUE-AZURE.md](DESPLIEGUE-AZURE.md). Lo que sigue describe el despliegue actual en GitHub Pages.
+
 `.github/workflows/deploy.yml` publica la carpeta `frontend/` en GitHub Pages cuando hay push a
 `master`. **No se modificó**, así que sigue publicando la versión HTML.
 
