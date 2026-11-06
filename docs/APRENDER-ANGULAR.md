@@ -228,6 +228,42 @@ npx ng generate component shared/card  # crea shared/card/card.ts (+ html/css)
 npx ng generate service services/x     # crea un servicio
 ```
 
+## 12. Caso práctico: el fondo de puntos (`layout/dot-background.ts`)
+
+Un componente que dibuja en un `<canvas>` en vez de usar HTML. Sirve para ver cómo Angular se lleva
+con APIs del navegador:
+
+| Técnica | Dónde | Para qué |
+|---|---|---|
+| `viewChild.required('canvas')` | `canvasRef` | Obtener el elemento del DOM de la plantilla (`<canvas #canvas>`) |
+| `afterNextRender(() => …)` | constructor | Ejecutar código **solo cuando el DOM ya existe** y en el navegador (el canvas no existe antes) |
+| `DestroyRef.onDestroy(…)` | final de `start()` | Quitar listeners y cancelar el `requestAnimationFrame` cuando el componente se destruye |
+| `styles` | decorador | Estilos **encapsulados** del componente (solo afectan a su `<canvas>`) |
+
+Cómo funciona el efecto:
+
+1. Se dibuja una grilla de puntos tenues (uno cada 28 px).
+2. `window` escucha `pointermove` (el canvas tiene `pointer-events: none`, el mouse lo atraviesa).
+3. En cada frame, cada punto calcula su distancia al cursor. Si está dentro de 170 px, su
+   **intensidad objetivo** sube (más cerca = más intensa).
+4. La intensidad real se acerca a la objetivo un 14 % por frame (`EASE`), por eso los puntos se
+   encienden y se apagan con una "estela" suave en lugar de saltar.
+5. Más intensidad = más opaco, más grande y un verde algo más claro.
+
+Detalles que vale la pena notar:
+
+- `z-index: -1` deja el canvas **detrás** del contenido; solo se ve donde no hay un fondo propio
+  (hero y secciones), no detrás de las tarjetas ni de la barra de navegación.
+- El bucle de animación solo corre mientras hay algo que animar. En reposo no gasta CPU.
+- Respeta `prefers-reduced-motion`: si el usuario lo activa en su sistema, se dibuja la grilla
+  estática sin el efecto.
+- Esta app **no usa zone.js** (es *zoneless*, el modo por defecto de Angular nuevo): Angular solo
+  actualiza la pantalla cuando cambia una señal, así que un `requestAnimationFrame` a 60 fps no
+  dispara trabajo de Angular. En proyectos antiguos con zone.js habría que envolver el bucle en
+  `NgZone.runOutsideAngular()`.
+- Constantes ajustables al inicio del archivo: `SPACING`, `INFLUENCE`, `EASE`, `BASE_ALPHA`,
+  `MAX_GROWTH`. Prueba a cambiarlas con `npm start` abierto.
+
 ---
 
 ## Ejercicios (de fácil a difícil)
@@ -248,7 +284,10 @@ npx ng generate service services/x     # crea un servicio
 7. **Formulario.** Una página con formulario de contacto usando `FormsModule` o formularios reactivos
    (`@angular/forms` ya está instalado).
 8. **Tests.** Añade una prueba para `Marquee` (`npm test`; el proyecto se generó sin tests).
-9. **Desplegar.** Sigue la sección "Despliegue" de [ARQUITECTURA.md](ARQUITECTURA.md) para publicar la
+9. **Personalizar el fondo.** Haz que el color de los puntos se lea de la variable CSS `--text`
+   (`getComputedStyle(document.documentElement).getPropertyValue('--text')`) en vez de estar
+   escrito en el código; o añade una señal para activar/desactivar el efecto con un botón.
+10. **Desplegar.** Sigue la sección "Despliegue" de [ARQUITECTURA.md](ARQUITECTURA.md) para publicar la
    versión Angular en GitHub Pages.
 
 ## Glosario rápido

@@ -41,7 +41,7 @@ src/
     ├── models/              interfaces TypeScript (Project, Skill, HelloResponse…)
     ├── data/                el contenido del sitio como datos (PROJECTS, SKILLS…)
     ├── services/            PortfolioApiService (HTTP) + API_BASE (URL del backend)
-    ├── layout/              status-bar, navbar, footer (parte fija)
+    ├── layout/              status-bar, navbar, footer, dot-background (parte fija)
     ├── shared/              piezas reutilizables: hero, marquee, big-statement, project-registry
     └── pages/               una carpeta por ruta: home, projects, experiments, about, widget-demo, not-found
 ```
@@ -59,6 +59,7 @@ src/
 | `<header class="statusbar">` + `main.js` (reloj) | `layout/status-bar.ts` |
 | `<nav>` copiado en cada HTML | `layout/navbar.ts` (una sola vez) |
 | `<footer>` copiado | `layout/footer.ts` |
+| (no existía) fondo de puntos que reacciona al mouse | `layout/dot-background.ts` (solo en la versión Angular) |
 | `<section class="hero">` | `shared/hero.ts` |
 | `<div class="marquee">` | `shared/marquee.ts` |
 | tabla "PROJECT REGISTRY" (duplicada en Home y Proyectos) | `shared/project-registry.ts` |
