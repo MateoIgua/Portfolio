@@ -17,20 +17,27 @@ var builder = WebApplication.CreateBuilder(args);
 
 // CORS — permite que el navegador del frontend nos llame desde otro origen.
 // Sin esto, el navegador bloquea las peticiones (mismo-origen por defecto).
+//
+// Los orígenes viven en la configuración, no en el código:
+//   - Cors:AllowedOrigins  → lista fija (appsettings.json): GitHub Pages y localhost.
+//   - Cors:ExtraOrigins    → texto separado por comas; sirve para añadir el dominio
+//                            de producción sin tocar el repo. En Azure App Service se
+//                            define como variable de entorno: Cors__ExtraOrigins
 const string FrontendCorsPolicy = "FrontendCorsPolicy";
+
+var allowedOrigins = (builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>() ?? [])
+    .Concat((builder.Configuration["Cors:ExtraOrigins"] ?? "")
+        .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
+    .Select(origin => origin.TrimEnd('/'))   // el navegador envía el origen sin "/" final
+    .Distinct()
+    .ToArray();
 
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(FrontendCorsPolicy, policy =>
     {
         policy
-            .WithOrigins(
-                "https://mateoigua.github.io",  // producción (GitHub Pages)
-                "http://localhost:8080",         // live-server por defecto
-                "http://127.0.0.1:8080",
-                "http://localhost:5099",         // por si usás python http.server
-                "http://127.0.0.1:5099"
-            )
+            .WithOrigins(allowedOrigins)
             .AllowAnyMethod()
             .AllowAnyHeader();
     });
@@ -58,6 +65,9 @@ if (app.Environment.IsDevelopment())
 app.UseCors(FrontendCorsPolicy);
 
 app.MapControllers();
+
+// Health check — Azure (y cualquier monitor) puede consultarlo para saber si la API vive.
+app.MapGet("/health", () => Results.Ok(new { status = "ok" }));
 
 
 // ---------------------------------------------------------------------

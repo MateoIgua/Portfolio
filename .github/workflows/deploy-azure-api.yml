@@ -1,0 +1,40 @@
+name: Deploy API to Azure App Service
+
+# Requiere:
+#   - secret   AZURE_WEBAPP_PUBLISH_PROFILE  (perfil de publicación de la Web App)
+#   - variable AZURE_WEBAPP_NAME             (nombre de la Web App)
+# Ver docs/DESPLIEGUE-AZURE.md.
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - 'backend/**'
+      - '.github/workflows/deploy-azure-api.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: azure-api
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Publish
+        run: dotnet publish backend/Portfolio.Api.csproj -c Release -o ./publish
+
+      - name: Deploy to Azure Web App
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: ${{ vars.AZURE_WEBAPP_NAME }}
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          package: ./publish
