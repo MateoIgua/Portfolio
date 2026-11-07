@@ -7,5 +7,5 @@ export const API_BASE = new InjectionToken<string>('API_BASE', {
   factory: () =>
     location.hostname === 'localhost' || location.hostname === '127.0.0.1'
       ? 'http://localhost:5050'
-      : 'https://api.mateoigua.com',
+      : 'https://mateoigua.com',
 });
