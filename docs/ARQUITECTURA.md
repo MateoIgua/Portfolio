@@ -5,9 +5,10 @@
 ```
  Navegador
     │
-    ├── frontend/            sitio estático (HTML/CSS/JS)         ──┐
-    ├── frontend-angular/    SPA Angular (compila a archivos       ├─ se publican como archivos
-    │                        estáticos en dist/)                  ──┘   estáticos (GitHub Pages)
+    ├── frontend/            SPA Angular (compila a archivos       ──► Azure Static Web Apps
+    │                        estáticos en dist/)
+    │
+    ├── frontend-html/       versión HTML de revisión (no se publica)
     │
     └── fetch / HttpClient ──►  backend/  Portfolio.Api (ASP.NET Core, :5050)
                                   GET /api/hello
@@ -17,7 +18,9 @@
 El sitio es 100 % contenido estático; el backend solo lo usa la página `widget-demo` como ejemplo
 de integración frontend ↔ API.
 
-## Frontend original (`frontend/`)
+## Versión HTML de revisión (`frontend-html/`)
+
+Solo para comparar con la versión Angular. **No se publica en ningún lado.**
 
 - 6 páginas HTML (`index`, `proyectos`, `experimentos`, `sobre-mi`, `widget-demo`, `404`).
 - Cada página repite a mano la status bar, la navegación y el footer.
@@ -27,7 +30,7 @@ de integración frontend ↔ API.
 **Problema que resuelve Angular:** el contenido (la tabla de proyectos, la barra de navegación, el
 footer) está copiado en varios HTML. Cambiar un dato implica editar varios archivos.
 
-## Frontend Angular (`frontend-angular/`)
+## Frontend Angular (`frontend/`)
 
 ```
 src/
@@ -91,7 +94,7 @@ Si cambias de puerto o publicas en otro dominio, agrégalo ahí.
 
 ## URL del backend
 
-`frontend-angular/src/app/services/api.config.ts` define el token `API_BASE`:
+`frontend/src/app/services/api.config.ts` define el token `API_BASE`:
 
 - en `localhost` / `127.0.0.1` → `http://localhost:5050`
 - en cualquier otro host → `https://TU-BACKEND-EN-PRODUCCION.com` (**pendiente**: poner la URL real
@@ -102,17 +105,11 @@ Si cambias de puerto o publicas en otro dominio, agrégalo ahí.
 **Plan elegido: Azure** (Static Web Apps + App Service + Azure SQL cuando haya datos). Guía completa en
 [DESPLIEGUE-AZURE.md](DESPLIEGUE-AZURE.md). Lo que sigue describe el despliegue actual en GitHub Pages.
 
-`.github/workflows/deploy.yml` publica la carpeta `frontend/` en GitHub Pages cuando hay push a
-`master`. **No se modificó**, así que sigue publicando la versión HTML.
+El sitio se publica con `.github/workflows/deploy-azure-frontend.yml` (Static Web Apps) y la API con
+`.github/workflows/deploy-azure-api.yml` (App Service). Ambos se disparan con push a `master`.
 
-Para publicar la versión Angular harían falta estos cambios (no aplicados):
-
-1. Instalar y compilar: `npm ci && npm run build` dentro de `frontend-angular`.
-2. Subir `frontend-angular/dist/portfolio-angular/browser` como artefacto de Pages.
-3. Como el sitio vive en `https://mateoigua.github.io/<repo>/`, compilar con
-   `ng build --base-href /<repo>/`.
-4. GitHub Pages no conoce las rutas de la SPA: copiar `index.html` como `404.html` en el build
-   para que recargar `/proyectos` no dé error.
+El despliegue en GitHub Pages (`deploy.yml`) se eliminó: publicaba la carpeta `frontend/` y ahora
+contiene la versión Angular, así que dejaría de funcionar.
 
 ## Pendientes conocidos
 

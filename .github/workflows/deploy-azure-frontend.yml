@@ -6,7 +6,7 @@ on:
   push:
     branches: [master]
     paths:
-      - 'frontend-angular/**'
+      - 'frontend/**'
       - '.github/workflows/deploy-azure-frontend.yml'
   workflow_dispatch:
 
@@ -26,10 +26,10 @@ jobs:
         with:
           node-version: 24
           cache: npm
-          cache-dependency-path: frontend-angular/package-lock.json
+          cache-dependency-path: frontend/package-lock.json
 
       - name: Build Angular
-        working-directory: frontend-angular
+        working-directory: frontend
         run: |
           npm ci
           npm run build
@@ -41,6 +41,6 @@ jobs:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           action: upload
-          app_location: frontend-angular/dist/portfolio-angular/browser
+          app_location: frontend/dist/portfolio-angular/browser
           skip_app_build: true
           skip_api_build: true

@@ -14,7 +14,7 @@ componente) funciona en producción igual que en tu máquina.
 ```
  Navegador
     │
-    ├── https://<tu-sitio>.azurestaticapps.net     Azure Static Web Apps   ← frontend-angular (archivos estáticos)
+    ├── https://<tu-sitio>.azurestaticapps.net     Azure Static Web Apps   ← frontend (archivos estáticos)
     │
     └── https://<tu-api>.azurewebsites.net/api/…   Azure App Service       ← backend/ (ASP.NET Core, .NET 10)
                                                         │
@@ -28,9 +28,9 @@ frontend necesita saber la URL de la API (`API_BASE`).
 
 | Pieza | Archivo | Para qué |
 |---|---|---|
-| Workflow del frontend | `.github/workflows/deploy-azure-frontend.yml` | Compila Angular y lo sube a Static Web Apps (push a `master` que toque `frontend-angular/`) |
+| Workflow del frontend | `.github/workflows/deploy-azure-frontend.yml` | Compila Angular y lo sube a Static Web Apps (push a `master` que toque `frontend/`) |
 | Workflow de la API | `.github/workflows/deploy-azure-api.yml` | Publica `backend/` en App Service (push a `master` que toque `backend/`) |
-| Ruteo de la SPA | `frontend-angular/public/staticwebapp.config.json` | Que recargar `/proyectos` sirva `index.html` en vez de dar 404 |
+| Ruteo de la SPA | `frontend/public/staticwebapp.config.json` | Que recargar `/proyectos` sirva `index.html` en vez de dar 404 |
 | CORS por configuración | `backend/Program.cs`, `backend/appsettings.json` | Los orígenes permitidos se definen en configuración; en Azure añades el tuyo sin editar código |
 | Health check | `GET /health` en la API | Para verificar que la API vive |
 | Parche de seguridad | `backend/Portfolio.Api.csproj` | `Microsoft.OpenApi` fijado a 2.7.5 (la 2.0.0 transitiva tenía una vulnerabilidad conocida) |
@@ -73,7 +73,7 @@ Crea un *resource group* (por ejemplo `rg-portfolio`) que contendrá todo; borra
 
 ### 4. Decirle al frontend dónde está la API
 
-Edita `frontend-angular/src/app/services/api.config.ts` y reemplaza el marcador
+Edita `frontend/src/app/services/api.config.ts` y reemplaza el marcador
 `https://TU-BACKEND-EN-PRODUCCION.com` por la URL de la API del paso 2.3. Haz commit.
 
 ### 5. Desplegar y verificar

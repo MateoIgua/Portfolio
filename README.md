@@ -1,16 +1,15 @@
 # Portfolio — Mateo Igua
 
 Portafolio personal con estética de terminal AS400 (verde sobre negro, fuentes VT323 y Space Mono).
-Es un monorepo con tres piezas:
+Es un monorepo con tres carpetas:
 
-| Carpeta | Qué es | Tecnología |
-|---|---|---|
-| `frontend/` | Versión original del sitio | HTML + CSS + JS planos |
-| `frontend-angular/` | Misma web reescrita para aprender Angular | Angular 22, TypeScript |
-| `backend/` | API de ejemplo (`Portfolio.Api`) | ASP.NET Core, .NET 10 |
+| Carpeta | Qué es | Tecnología | ¿Producción? |
+|---|---|---|---|
+| `frontend/` | El sitio | Angular 22, TypeScript | Sí (Azure Static Web Apps) |
+| `frontend-html/` | Versión original en HTML, solo como referencia | HTML + CSS + JS planos | **No** |
+| `backend/` | API (`Portfolio.Api`) | ASP.NET Core, .NET 10 | Sí (Azure App Service) |
 
-> Esta rama (`feature/frontend-angular`) existe para **estudiar Angular con un proyecto conocido**.
-> `frontend/` se deja intacto para poder comparar lado a lado cada página HTML con su componente Angular.
+> `frontend-html/` se conserva para comparar cada página HTML con su componente Angular. No se publica.
 
 ## Documentación
 
@@ -20,12 +19,12 @@ Es un monorepo con tres piezas:
 
 ## Cómo ejecutarlo
 
-Requisitos: Node 20+ (probado con 26), npm, y .NET SDK para el backend.
+Requisitos: Node 22+ (probado con 26), npm, y .NET SDK para el backend.
 
-### Frontend Angular
+### Frontend (Angular)
 
 ```bash
-cd frontend-angular
+cd frontend
 npm install
 npm start          # http://localhost:4200
 ```
@@ -37,20 +36,20 @@ cd backend
 dotnet run --urls http://localhost:5050
 ```
 
-### Frontend original (HTML)
+### Versión HTML de revisión
 
-Cualquier servidor estático sirve, por ejemplo `npx live-server frontend --port=8080`.
+Cualquier servidor estático sirve, por ejemplo `npx live-server frontend-html --port=8080`.
 
 ## Comandos útiles de Angular
 
 ```bash
 npm start                      # servidor de desarrollo con recarga automática
-npm run build                  # build de producción en frontend-angular/dist/
+npm run build                  # build de producción en frontend/dist/
 npx ng generate component pages/contacto   # crea un componente nuevo
 ```
 
 ## Historia del proyecto
 
 1. Blazor (primera versión)
-2. HTML + CSS + JS puros (`frontend/`)
-3. Angular (`frontend-angular/`, esta rama)
+2. HTML + CSS + JS puros (`frontend-html/`, revisión)
+3. Angular (`frontend/`, versión de producción)
