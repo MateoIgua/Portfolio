@@ -1,36 +1,40 @@
 // Modelos (interfaces): describen la FORMA de los datos. TypeScript los usa
 // para avisarte en tiempo de compilación si te equivocas en un campo.
 
-export type ProjectStatus = 'ACTIVO' | 'ARCHIVO';
+// Un texto en los dos idiomas del sitio. La plantilla elige uno con i18n.t().
+export interface Localized {
+  es: string;
+  en: string;
+}
 
 export interface Project {
   id: string;
-  name: string;
-  stack: string;
+  name: Localized;
+  stack: Localized;
   year: number;
-  status: ProjectStatus;
-  description: string;
-  tags: string[];
+  status: Localized;
+  description: Localized;
+  tags: Localized[];
 }
 
 export interface Experiment {
   id: string;
   title: string;
-  description: string;
-  tags: string[];
+  description: Localized;
+  tags: Localized[];
 }
 
 export interface Skill {
   id: number;
   name: string;
-  category: string;
-  focus: string;
-  level: string;
+  category: Localized;
+  focus: Localized;
+  level: Localized;
 }
 
 export interface StackCard {
   icon: string;
-  title: string;
+  title: Localized;
   tags: string[];
   interestedIn?: string[];
 }

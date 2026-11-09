@@ -1,79 +1,72 @@
 import { JsonPipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
-import { Hero } from '../../shared/hero';
+import { UI } from '../../data/ui';
+import { API_BASE } from '../../services/api.config';
+import { I18n } from '../../services/i18n';
 import { PortfolioApiService } from '../../services/portfolio-api.service';
 
-// rxResource convierte una llamada Observable en un "recurso" con señales:
+// Contenido de la sección "API" (ya no es una página propia). rxResource
+// convierte una llamada Observable en un "recurso" con señales:
 //   .value()      → los datos (o undefined)
 //   .error()      → el error, si lo hubo
 //   .isLoading()  → true mientras espera
-// Reemplaza los try/catch + getElementById + textContent del HTML original.
+// El portafolio lo carga con @defer: la petición solo se hace cuando la
+// sección se acerca a la pantalla.
 @Component({
   selector: 'app-widget-demo',
-  imports: [Hero, JsonPipe],
+  imports: [JsonPipe],
   template: `
-    <app-hero label="FRONTEND ↔ BACKEND" top="WIDGET" bottom="DEMO">
-      Esta página llama al backend (Portfolio.Api en <code>http://localhost:5050</code>) y muestra
-      la respuesta. Si ves los recuadros con datos abajo, la integración funciona.
-    </app-hero>
+    <p class="section-intro">
+      {{ i18n.t(ui.apiIntro) }}
+      {{ i18n.t(ui.apiBackendAt) }} <code>{{ apiBase }}</code>
+    </p>
 
-    <section class="section">
-      <div class="container">
-        <p class="section-label">RESPUESTAS DE LA API</p>
-        <h2 class="section-title">/api/hello</h2>
+    <h3 class="sub-title">/api/hello</h3>
+    <div class="info-block">
+      @if (hello.isLoading()) {
+        <p class="info-block-header">{{ i18n.t(ui.apiLoading) }}</p>
+        <pre class="api-out">{{ i18n.t(ui.apiWaiting) }}</pre>
+      } @else if (hello.error()) {
+        <p class="info-block-header api-error">{{ i18n.t(ui.apiError) }}</p>
+        <pre class="api-out">{{ hello.error()?.message }}
 
-        <div class="info-block" style="margin-bottom: 2rem">
-          @if (hello.isLoading()) {
-            <p class="info-block-header">CARGANDO...</p>
-            <pre style="color: var(--text-bright); font-size: 1.1rem">[esperando respuesta del servidor]</pre>
-          } @else if (hello.error()) {
-            <p class="info-block-header" style="color: var(--error)">✗ ERROR</p>
-            <pre style="overflow-x: auto; color: var(--text-bright); font-size: 1.1rem">{{ hello.error()?.message }}
+{{ i18n.t(ui.apiCheck) }} {{ apiBase }}</pre>
+      } @else {
+        <p class="info-block-header api-ok">✓ 200 OK</p>
+        <pre class="api-out">{{ hello.value() | json }}</pre>
+      }
+    </div>
 
-Verificá que el backend esté corriendo en localhost:5050</pre>
-          } @else {
-            <p class="info-block-header" style="color: var(--text-bright)">✓ 200 OK</p>
-            <pre style="overflow-x: auto; color: var(--text-bright); font-size: 1.1rem">{{ hello.value() | json }}</pre>
-          }
-        </div>
+    <h3 class="sub-title">/api/hello/now</h3>
+    <div class="info-block">
+      @if (now.isLoading()) {
+        <p class="info-block-header">{{ i18n.t(ui.apiLoading) }}</p>
+        <pre class="api-out">{{ i18n.t(ui.apiWaiting) }}</pre>
+      } @else if (now.error()) {
+        <p class="info-block-header api-error">{{ i18n.t(ui.apiError) }}</p>
+        <pre class="api-out">{{ now.error()?.message }}</pre>
+      } @else {
+        <p class="info-block-header api-ok">✓ 200 OK</p>
+        <pre class="api-out">{{ now.value() | json }}</pre>
+      }
+    </div>
 
-        <h2 class="section-title">/api/hello/now</h2>
-        <div class="info-block">
-          @if (now.isLoading()) {
-            <p class="info-block-header">CARGANDO...</p>
-            <pre style="color: var(--text-bright); font-size: 1.1rem">[esperando respuesta del servidor]</pre>
-          } @else if (now.error()) {
-            <p class="info-block-header" style="color: var(--error)">✗ ERROR</p>
-            <pre style="overflow-x: auto; color: var(--text-bright); font-size: 1.1rem">{{ now.error()?.message }}</pre>
-          } @else {
-            <p class="info-block-header" style="color: var(--text-bright)">✓ 200 OK</p>
-            <pre style="overflow-x: auto; color: var(--text-bright); font-size: 1.1rem">{{ now.value() | json }}</pre>
-          }
-        </div>
-      </div>
-    </section>
-
-    <section class="section">
-      <div class="container">
-        <p class="section-label">CÓMO REUSAR</p>
-        <h2 class="section-title">PATRÓN</h2>
-        <p style="max-width: 60ch; margin-bottom: 1rem">
-          Mirá el código de esta página + <code>services/portfolio-api.service.ts</code>. Para crear
-          tus propios widgets:
-        </p>
-        <ol style="max-width: 60ch; padding-left: 1.5rem; list-style: decimal">
-          <li>Agregá un endpoint en <code>backend/Controllers/</code></li>
-          <li>Agregá un método (y su interface) en <code>PortfolioApiService</code></li>
-          <li>En un componente, crea un <code>rxResource</code> que llame a ese método</li>
-          <li>En la plantilla, usa <code>&#64;if</code> con <code>isLoading()</code>, <code>error()</code> y <code>value()</code></li>
-        </ol>
-      </div>
-    </section>
+    <h3 class="sub-title">{{ i18n.t(ui.apiHowTitle) }}</h3>
+    <p class="section-intro">{{ i18n.t(ui.apiHowIntro) }}</p>
+    <ol class="steps">
+      <li>{{ i18n.t(ui.apiStep1) }}</li>
+      <li>{{ i18n.t(ui.apiStep2) }}</li>
+      <li>{{ i18n.t(ui.apiStep3) }}</li>
+      <li>{{ i18n.t(ui.apiStep4) }}</li>
+    </ol>
   `,
 })
 export class WidgetDemo {
   private readonly api = inject(PortfolioApiService);
+  protected readonly i18n = inject(I18n);
+  protected readonly ui = UI;
+  protected readonly apiBase = inject(API_BASE);
 
   protected readonly hello = rxResource({ stream: () => this.api.getHello() });
   protected readonly now = rxResource({ stream: () => this.api.getServerTime() });

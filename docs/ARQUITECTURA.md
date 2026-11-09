@@ -32,51 +32,60 @@ footer) está copiado en varios HTML. Cambiar un dato implica editar varios arch
 
 ## Frontend Angular (`frontend/`)
 
+El sitio es **una sola página** con seis secciones (inicio, stack, proyectos, experimentos, sobre mí y
+API), un menú vertical fijo a la derecha que resalta la sección visible, selector de idioma ES/EN y
+diseño adaptable a móvil.
+
 ```
 src/
 ├── index.html               única página HTML; contiene <app-root>
-├── styles.css               reset.css + main.css originales, sin cambios
+├── styles.css               reset + estilos globales (incluye el menú lateral y el responsive)
 ├── main.ts                  arranque: bootstrapApplication(App, appConfig)
 └── app/
-    ├── app.ts               componente raíz: status-bar + navbar + <router-outlet> + footer
+    ├── app.ts               componente raíz: dot-background + status-bar + <router-outlet> + footer
     ├── app.config.ts        providers globales (router, HttpClient)
-    ├── app.routes.ts        URL → página (carga perezosa)
-    ├── models/              interfaces TypeScript (Project, Skill, HelloResponse…)
-    ├── data/                el contenido del sitio como datos (PROJECTS, SKILLS…)
-    ├── services/            PortfolioApiService (HTTP) + API_BASE (URL del backend)
-    ├── layout/              status-bar, navbar, footer, dot-background (parte fija)
-    ├── shared/              piezas reutilizables: hero, marquee, big-statement, project-registry
-    └── pages/               una carpeta por ruta: home, projects, experiments, about, widget-demo, not-found
+    ├── app.routes.ts        '' → Portfolio; URL antiguas → /#seccion; '**' → 404
+    ├── models/              interfaces TypeScript (Localized, Project, Skill…)
+    ├── data/                portfolio.data.ts (contenido bilingüe) y ui.ts (textos de la interfaz)
+    ├── services/            I18n (idioma), SectionSpy (sección activa), PortfolioApiService, API_BASE
+    ├── layout/              status-bar (marca, ruta, reloj, idioma), section-nav (menú derecho),
+    │                        footer, dot-background
+    ├── shared/              hero, marquee, big-statement, project-registry
+    └── pages/               portfolio (la página única), widget-demo (contenido de la sección API), not-found
 ```
 
 ### Mapa HTML original → Angular
 
 | Antes | Ahora |
 |---|---|
-| `index.html` | `pages/home/home.ts` en la ruta `/` |
-| `proyectos.html` | `pages/projects/projects.ts` en `/proyectos` |
-| `experimentos.html` | `pages/experiments/experiments.ts` en `/experimentos` |
-| `sobre-mi.html` | `pages/about/about.ts` en `/sobre-mi` |
-| `widget-demo.html` | `pages/widget-demo/widget-demo.ts` en `/widget-demo` |
-| `404.html` | `pages/not-found/not-found.ts` en `**` (cualquier ruta desconocida) |
+| `index.html`, `proyectos.html`, `experimentos.html`, `sobre-mi.html`, `widget-demo.html` | Una sección cada una dentro de `pages/portfolio/portfolio.ts` (`#home`, `#stack`, `#projects`, `#experiments`, `#about`, `#api`) |
+| `404.html` | `pages/not-found/not-found.ts` en `**` |
 | `<header class="statusbar">` + `main.js` (reloj) | `layout/status-bar.ts` |
-| `<nav>` copiado en cada HTML | `layout/navbar.ts` (una sola vez) |
+| `<nav>` copiado en cada HTML | `layout/section-nav.ts`: menú lateral derecho con scroll-spy |
 | `<footer>` copiado | `layout/footer.ts` |
-| (no existía) fondo de puntos que reacciona al mouse | `layout/dot-background.ts` (solo en la versión Angular) |
-| `<section class="hero">` | `shared/hero.ts` |
+| (no existía) selector de idioma | `services/i18n.ts` + `data/ui.ts` |
+| (no existía) fondo de puntos que reacciona al mouse | `layout/dot-background.ts` |
+| `<section class="hero">` | `shared/hero.ts` (solo en el inicio) |
 | `<div class="marquee">` | `shared/marquee.ts` |
-| tabla "PROJECT REGISTRY" (duplicada en Home y Proyectos) | `shared/project-registry.ts` |
+| tabla "PROJECT REGISTRY" | `shared/project-registry.ts` |
 | tarjetas escritas a mano | `@for` sobre `data/portfolio.data.ts` |
 | `assets/js/api-client.js` | `services/portfolio-api.service.ts` |
 
+Las URL antiguas (`/proyectos`, `/experimentos`, `/sobre-mi`, `/widget-demo`) redirigen a la sección
+equivalente (`/#projects`, …).
+
 ### Decisiones de diseño
 
-- **CSS global.** Se reutilizó el CSS tal cual en `styles.css` para que la migración sea visualmente
-  idéntica y el foco esté en aprender Angular. Una evolución natural (ejercicio) es mover estilos a
-  cada componente (ver la guía de estudio).
-- **Contenido como datos.** Proyectos, experimentos, skills y stack están en `data/portfolio.data.ts`,
-  tipados por `models/portfolio.models.ts`. Para agregar un proyecto se añade un objeto al arreglo.
-- **Rutas con carga perezosa.** Cada página es un chunk JS separado que se descarga al visitarla.
+- **CSS global.** Se reutilizó el CSS original en `styles.css`; el foco está en aprender Angular. Una
+  evolución natural (ejercicio) es mover estilos a cada componente.
+- **Contenido como datos, en dos idiomas.** Proyectos, experimentos, skills y stack están en
+  `data/portfolio.data.ts`; cada texto es `{ es, en }`. Los textos fijos están en `data/ui.ts`.
+  `I18n.t()` elige el del idioma activo (señal), así que cambiar de idioma repinta sin recargar.
+- **Menú lateral con scroll-spy.** Se escucha el `scroll` y se calcula la sección activa
+  (`SectionSpy.refresh()`); el resultado es una señal que leen el menú y la barra superior.
+- **Sección API con `@defer`.** `widget-demo` se carga (y llama a la API) solo al acercarse a la pantalla.
+- **Móvil.** Hasta 720 px: menú de marcas táctiles, reloj oculto, botones a ancho completo y tablas
+  con desplazamiento horizontal.
 - **Componentes standalone.** No hay `NgModule`; cada componente declara lo que usa en `imports`.
 
 ## Backend (`backend/`)
