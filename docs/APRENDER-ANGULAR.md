@@ -11,10 +11,11 @@ Con el servidor corriendo, cada cambio que guardes se refleja al instante.
 1. `src/main.ts` → `src/app/app.config.ts` → `src/app/app.ts` (cómo arranca todo)
 2. `layout/footer.ts` (el componente más simple)
 3. `shared/marquee.ts` y `shared/hero.ts` (inputs y proyección)
-4. `layout/navbar.ts` (rutas y `@for`)
-5. `app.routes.ts` y `pages/projects/projects.ts`
-6. `layout/status-bar.ts` (señales + RxJS)
-7. `services/` y `pages/widget-demo/widget-demo.ts` (HTTP)
+4. `pages/portfolio/portfolio.ts` (la página única: secciones, `@for`, `@defer`)
+5. `app.routes.ts` (rutas y redirecciones)
+6. `services/i18n.ts` + `data/ui.ts` (idioma ES/EN con señales)
+7. `layout/status-bar.ts` (señales + RxJS) y `layout/section-nav.ts` (menú lateral)
+8. `services/portfolio-api.service.ts` (HTTP; hoy ninguna pantalla lo usa, ver ejercicio 12)
 
 ---
 
@@ -28,7 +29,7 @@ Angular se compone de piezas pequeñas que encajan:
 
 | Pieza | Para qué | Ejemplo aquí |
 |---|---|---|
-| **Componente** | Un trozo de UI (HTML + lógica + estilo) | `Footer`, `Hero`, `Home` |
+| **Componente** | Un trozo de UI (HTML + lógica + estilo) | `Footer`, `Hero`, `Portfolio` |
 | **Plantilla** | El HTML del componente, con sintaxis extra | `@for`, `{{ }}`, `[words]` |
 | **Servicio** | Lógica reutilizable sin UI | `PortfolioApiService` |
 | **Router** | URL → componente | `app.routes.ts` |
@@ -63,11 +64,11 @@ usaban `NgModule`; hoy ya no hace falta.)
 
 | Sintaxis | Significado | Dónde verla |
 |---|---|---|
-| `{{ expr }}` | Interpolación: muestra un valor | `{{ p.name }}` en `projects.ts` |
+| `{{ expr }}` | Interpolación: muestra un valor | `{{ i18n.t(p.name) }}` en `portfolio.ts` |
 | `[prop]="expr"` | Enlazar una propiedad (datos → hijo/DOM) | `<app-marquee [words]="tech" />` |
 | `(evento)="fn()"` | Escuchar un evento (no hay ejemplo aún; ver ejercicio 3) | `(click)="…"` |
-| `@for` | Repetir | tarjetas de `home.ts` |
-| `@if / @else` | Condicional | estados del widget en `widget-demo.ts` |
+| `@for` | Repetir | tarjetas de `portfolio.ts` |
+| `@if / @else` | Condicional | `@if (card.interestedIn)` en `portfolio.ts` |
 | `\| pipe` | Transformar para mostrar | `{{ hello.value() \| json }}` |
 
 ### `@for` y el `track`
@@ -79,18 +80,21 @@ usaban `NgModule`; hoy ya no hace falta.)
 ```
 
 `track` le dice a Angular cómo identificar cada elemento para no repintar todo cuando la lista cambia.
-Usa un id único. Variables útiles: `$index`, `$first`, `$last` (se usa `$last` en `projects.ts` para no
+Usa un id único. Variables útiles: `$index`, `$first`, `$last` (se usa `$last` en `portfolio.ts` para no
 poner el separador `·` después de la última etiqueta).
 
 > Antes: 4 bloques `<article>` copiados a mano. Ahora: 1 plantilla + 4 objetos en `data/`.
 
 ### `@if`
 
-En `widget-demo.ts` hay tres estados mutuamente excluyentes:
+En `portfolio.ts`, cada tarjeta del stack muestra el bloque "Interesado en:" solo si el dato existe:
 
 ```html
-@if (hello.isLoading()) { … } @else if (hello.error()) { … } @else { … }
+@if (card.interestedIn) { … }
 ```
+
+`@if` admite `@else if` y `@else` para estados mutuamente excluyentes (por ejemplo cargando / error /
+datos, ver `rxResource` más abajo).
 
 ## 4. Datos tipados: `models/` y `data/`
 
@@ -120,7 +124,7 @@ expresión TypeScript"; sin corchetes (`label="DEVELOPER · .NET / C#"` en `<app
 
 `shared/hero.ts` tiene `<p class="hero-tagline"><ng-content /></p>`. Lo que el padre escribe **dentro**
 de `<app-hero>…</app-hero>` aparece en ese hueco. Con `select="[cta]"` se define un segundo hueco para
-los elementos que lleven el atributo `cta` (los botones de `home.ts`).
+los elementos que lleven el atributo `cta` (los botones del inicio en `portfolio.ts`).
 
 ### Hijo → padre: `output()`
 
@@ -143,26 +147,88 @@ el bucle infinito de la animación. Si `words` cambia, `looped` se recalcula aut
 
 ## 7. Rutas
 
-`app.routes.ts` es una tabla `URL → componente`:
+El sitio ahora es **una sola página con secciones** (inicio, stack, proyectos, experimentos y sobre mí). `app.routes.ts`:
 
 ```ts
-{ path: 'proyectos', title: 'PROYECTOS / MATEO IGUA', loadComponent: () => import('./pages/projects/projects').then(m => m.Projects) }
+const toSection = (id: string) => () => inject(Router).parseUrl(`/#${id}`);
+
+export const routes: Routes = [
+  { path: '', title: 'Mateo Igua', component: Portfolio },
+  { path: 'proyectos', redirectTo: toSection('projects') },   // URL antigua → /#projects
+  …
+  { path: '**', title: '404 / MATEO IGUA', loadComponent: () => import('./pages/not-found/not-found').then(m => m.NotFound) },
+];
 ```
 
-- `loadComponent` + `import()` = **lazy loading**: ese componente se compila a un archivo JS aparte
-  que solo se descarga al visitar la ruta. (Mira la salida de `npm run build`: un chunk por página.)
-- `title` cambia el `<title>` de la pestaña.
+- `redirectTo` puede ser una **función** (se ejecuta con inyección de dependencias): aquí devuelve un
+  `UrlTree`, así las URL antiguas (`/proyectos`…) siguen funcionando y bajan a la sección.
+- `loadComponent` + `import()` = **lazy loading**: la página 404 es un archivo JS aparte que solo se
+  descarga si hace falta. (Mira la salida de `npm run build`.)
 - `path: '**'` captura cualquier URL desconocida → página 404 (reemplaza a `404.html`).
 - En `app.ts`, `<router-outlet />` marca dónde se pinta la página actual.
 
-En plantillas **no uses `href="/proyectos"`** (recargaría todo): usa `routerLink`:
+Cuando una app tiene varias páginas se navega con `routerLink` (no `href="/proyectos"`, que
+recargaría todo) y `routerLinkActive` marca el enlace activo. Aquí, dentro de la página única, el
+menú usa **anclas** (`#projects`) y el scroll.
 
-```html
-<a [routerLink]="item.path" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+## 7b. La página única y el menú lateral
+
+**Secciones.** `pages/portfolio/portfolio.ts` contiene una `<section id="…">` por cada antigua página.
+Los ids salen de la lista `SECTIONS` (`services/section-spy.ts`), que también genera el menú.
+
+**Menú que se repliega a la derecha** (`layout/section-nav.ts`):
+
+- Es una barra `position: fixed` a la derecha con una marca por sección. La activa se resalta
+  (marca larga y etiqueta en amarillo); las demás quedan con `opacity: .35`. La etiqueta va **encima
+  de la línea** (`position: absolute`, así mostrarla u ocultarla no mueve nada). Al pasar el mouse o
+  enfocar con teclado, todas las etiquetas se muestran.
+- Para saber qué sección se ve, escucha el `scroll` (dentro de `afterNextRender`) y llama a
+  `SectionSpy.refresh()`: la activa es la última sección cuyo borde superior ya pasó el 40 % de la
+  ventana. Al final de la página, siempre la última.
+- El resultado se guarda en una **señal** (`SectionSpy.active`). Por eso la plantilla del menú y la
+  ruta `cd: ~/projects` de la barra superior se actualizan solas.
+- Al hacer clic, `SectionSpy.scrollTo(id)` usa `scrollIntoView({ behavior: 'smooth' })`; el CSS
+  `scroll-margin-top` evita que la barra superior tape el título.
+
+**Marquesina.** `<app-marquee>` aparece una sola vez, después de la última sección, en vez de
+repetirse en cada una.
+
+## 7c. Idioma ES / EN (`services/i18n.ts`, `data/ui.ts`)
+
+- Cada texto visible es un objeto `{ es: '…', en: '…' }` (tipo `Localized`). Los datos
+  (`portfolio.data.ts`) y los textos fijos de la interfaz (`ui.ts`) usan el mismo formato.
+- `I18n` guarda el idioma en una señal `lang`. `i18n.t(texto)` devuelve el texto del idioma activo,
+  y como lee la señal, **todas las plantillas que lo usan se actualizan al cambiar de idioma**, sin
+  recargar.
+- El idioma inicial es el que se eligió la última vez (`localStorage`) o, si no hay, el del navegador.
+  Un `effect()` mantiene `<html lang>` sincronizado y guarda la elección.
+- El selector ES | EN está en la barra superior (`layout/status-bar.ts`).
+- Para agregar un texto: añade una clave a `ui.ts` con `l('español', 'english')` y úsala como
+  `{{ i18n.t(ui.miClave) }}`.
+
+**Diseño móvil.** Todo está en `styles.css` (sección "Responsive"): en pantallas de hasta 720 px el
+menú lateral queda como marcas táctiles, el reloj se oculta, los botones ocupan todo el ancho y las
+los proyectos pasan a una sola columna.
+
+**Lista de proyectos con panel (60 / 40).** En `portfolio.ts`:
+
+```ts
+protected readonly selected = signal(PROJECTS[0].id);
+protected readonly current = computed(() => PROJECTS.find(p => p.id === this.selected()) ?? PROJECTS[0]);
 ```
 
-`routerLinkActive` añade la clase `active` al enlace de la ruta actual. En el HTML original esa clase
-se escribía a mano en cada archivo. `exact: true` evita que "HOME" (`/`) se marque activo en todas las rutas.
+```html
+<li class="project-row" (mouseenter)="selected.set(p.id)"> … </li>
+@let cur = current();
+<aside class="project-detail"> {{ i18n.t(cur.description) }} </aside>
+```
+
+- `selected` es una **señal**; `current` es un `computed` que busca el proyecto. Al pasar el mouse,
+  enfocar el título o tocarlo, `selected.set(...)` cambia y el panel se repinta solo.
+- `@let` guarda un valor en una variable de plantilla para no repetir `current()`.
+- `@if (cur.image) { <img …> } @else { … }`: si el proyecto tiene `image` (ruta dentro de `public/`),
+  se muestra; si no, el panel dibuja el id como logo.
+- La rejilla `grid-template-columns: 3fr 2fr` da la proporción 60 / 40; en móvil pasa a una columna.
 
 ## 8. Servicios e inyección de dependencias
 
@@ -203,15 +269,23 @@ clock = toSignal(timer(0, 1000).pipe(map(() => new Date().toLocaleTimeString('en
 Compara con `main.js` original: `setInterval` + `getElementById` + `textContent`. Aquí solo declaras
 "el reloj es esto" y la plantilla muestra `{{ clock() }}`. Angular limpia la suscripción solo.
 
-### `rxResource` — `pages/widget-demo/widget-demo.ts`
+### `rxResource` — patrón para llamar a la API
+
+La pantalla de demostración que lo usaba se retiró del sitio, pero `PortfolioApiService` sigue
+disponible. Así se usaría en un componente:
 
 ```ts
+private readonly api = inject(PortfolioApiService);
 hello = rxResource({ stream: () => this.api.getHello() });
 ```
 
+```html
+@if (hello.isLoading()) { … } @else if (hello.error()) { … } @else { {{ hello.value() | json }} }
+```
+
 Ofrece señales `value()`, `error()`, `isLoading()`. Es el reemplazo de los `try/catch` + manipular el
-DOM a mano del original. Observa cómo el estado de error (✗) aparece sin que escribas código para
-"mostrarlo": solo la plantilla `@if` reacciona.
+DOM a mano del original: el estado de error aparece sin que escribas código para "mostrarlo", solo
+la plantilla `@if` reacciona.
 
 ## 10. Estilos
 
@@ -268,27 +342,31 @@ Detalles que vale la pena notar:
 
 ## Ejercicios (de fácil a difícil)
 
-1. **Agregar un proyecto.** Añade un objeto en `PROJECTS` (`data/portfolio.data.ts`). Verifica que
-   aparece en la tabla de Home, en la de Proyectos y en las fichas, y que el contador `05 ENTRIES` cambia.
-2. **Nueva página "Contacto".** Crea `pages/contact/contact.ts`, agrega la ruta en `app.routes.ts` y el
-   ítem en `Navbar.items`. Reutiliza `<app-hero>`.
-3. **Interactividad con eventos.** En Experimentos, añade botones de filtro por etiqueta (`C#`, `LINQ`…).
+1. **Agregar un proyecto.** Añade un objeto en `PROJECTS` (`data/portfolio.data.ts`) con sus textos en
+   los dos idiomas. Verifica que aparece en la lista de proyectos y que, al seleccionarlo, el panel derecho muestra sus datos.
+2. **Nueva sección "Contacto".** Agrega un `<section id="contact">` en `portfolio.ts` y una entrada
+   en `SECTIONS` (`services/section-spy.ts`): el menú lateral la incluye solo. Añade sus textos a `ui.ts`.
+3. **Interactividad con eventos.** En la sección Experimentos, añade botones de filtro por etiqueta (`C#`, `LINQ`…).
    Necesitarás una `signal` con el filtro seleccionado, `(click)="filtro.set('LINQ')"` y un `computed`
    que devuelva la lista filtrada. Es el ejercicio clave: junta señales + eventos + `@for`.
-4. **Extraer un componente `Card`.** Home, Proyectos y Experimentos repiten el `<article class="card">`.
+4. **Extraer un componente `Card`.** Las secciones Stack, Proyectos y Experimentos repiten el `<article class="card">`.
    Crea `shared/card.ts` con `input()`s y proyección de contenido.
 5. **Estilos encapsulados.** Mueve las reglas de `.marquee` desde `styles.css` a `marquee.ts` usando
    `styles: [...]`. Observa en las DevTools los atributos `_ngcontent-*` que Angular añade.
 6. **Pipe propio.** Crea un pipe `padZero` que reemplace `length.toString().padStart(2, '0')`
-   (aparece en `project-registry.ts` y `experiments.ts`).
+   (aparece en `portfolio.ts`).
 7. **Formulario.** Una página con formulario de contacto usando `FormsModule` o formularios reactivos
    (`@angular/forms` ya está instalado).
 8. **Tests.** Añade una prueba para `Marquee` (`npm test`; el proyecto se generó sin tests).
 9. **Personalizar el fondo.** Haz que el color de los puntos se lea de la variable CSS `--text`
    (`getComputedStyle(document.documentElement).getPropertyValue('--text')`) en vez de estar
    escrito en el código; o añade una señal para activar/desactivar el efecto con un botón.
-10. **Desplegar.** Sigue la sección "Despliegue" de [ARQUITECTURA.md](ARQUITECTURA.md) para publicar la
-   versión Angular en GitHub Pages.
+10. **Desplegar.** Sigue [DESPLIEGUE-AZURE.md](DESPLIEGUE-AZURE.md) para publicar el sitio.
+11. **Un tercer idioma.** Añade `'fr'` al tipo `Lang`, una clave `fr` en `Localized` y un botón en el
+    selector. El compilador te señalará cada texto al que le falta la traducción.
+12. **Volver a usar la API.** Crea un componente con `rxResource` que llame a
+    `PortfolioApiService.getHello()` y muéstralo en una sección nueva (ejercicio 2). Necesitas el backend
+    corriendo (`dotnet run --urls http://localhost:5050` en `backend/`) y revisar `API_BASE`.
 
 ## Glosario rápido
 

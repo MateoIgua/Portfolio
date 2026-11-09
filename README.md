@@ -17,6 +17,11 @@ Es un monorepo con tres carpetas:
 - [docs/DESPLIEGUE-AZURE.md](docs/DESPLIEGUE-AZURE.md) — cómo publicar frontend + API + base de datos en Azure.
 - [docs/APRENDER-ANGULAR.md](docs/APRENDER-ANGULAR.md) — guía de estudio: cada concepto de Angular explicado con el código real de este proyecto, y ejercicios.
 
+## Hoja de vida
+
+El botón "Descargar hoja de vida" (sección Sobre mí) descarga `frontend/public/cv/Mateo-Igua-CV.pdf`.
+Coloca ahí tu PDF con ese nombre.
+
 ## Cómo ejecutarlo
 
 Requisitos: Node 22+ (probado con 26), npm, y .NET SDK para el backend.
@@ -29,7 +34,7 @@ npm install
 npm start          # http://localhost:4200
 ```
 
-### Backend (opcional; solo lo usa la página `/widget-demo`)
+### Backend (opcional; la interfaz actual no lo usa)
 
 ```bash
 cd backend

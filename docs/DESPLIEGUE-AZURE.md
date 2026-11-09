@@ -81,9 +81,9 @@ Edita `frontend/src/app/services/api.config.ts` y reemplaza el marcador
 1. Fusiona a `master` (o lanza cada workflow a mano desde la pestaña *Actions* → *Run workflow*).
 2. Comprueba:
    - `https://<api>/health` → `{"status":"ok"}`
-   - `https://<sitio>/widget-demo` → ambos recuadros en **✓ 200 OK** con datos reales
+   - `https://<api>/api/hello` → JSON con `message`, `from` y `timestamp`
    - Recargar `https://<sitio>/proyectos` directamente → carga (no da 404)
-3. Si `widget-demo` muestra error: abre las DevTools (F12) → *Console*. Un error de **CORS** significa que
+3. Cuando un widget del sitio llame a la API y falle: abre las DevTools (F12) → *Console*. Un error de **CORS** significa que
    `Cors__ExtraOrigins` no coincide exactamente con el origen del sitio (esquema + dominio, sin ruta).
 
 ### 6. Retirar la publicación antigua

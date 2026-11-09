@@ -1,12 +1,18 @@
-import { Routes } from '@angular/router';
+import { inject } from '@angular/core';
+import { Router, Routes } from '@angular/router';
+import { Portfolio } from './pages/portfolio/portfolio';
 
-// Tabla de rutas: URL → componente. loadComponent = carga perezosa (lazy):
-// el código de cada página se descarga solo cuando el usuario la visita.
+// Las URL antiguas (/proyectos, /experimentos…) siguen funcionando: redirigen a
+// la página única y bajan hasta la sección correspondiente (/#projects, etc.).
+const toSection = (id: string) => () => inject(Router).parseUrl(`/#${id}`);
+
+// Tabla de rutas: URL → componente. Ahora el sitio es UNA página con secciones;
+// solo la ruta "no encontrada" se carga de forma perezosa (loadComponent).
 export const routes: Routes = [
-  { path: '', title: 'MATEO IGUA / DEV TERMINAL', loadComponent: () => import('./pages/home/home').then(m => m.Home) },
-  { path: 'proyectos', title: 'PROYECTOS / MATEO IGUA', loadComponent: () => import('./pages/projects/projects').then(m => m.Projects) },
-  { path: 'experimentos', title: 'EXPERIMENTOS / MATEO IGUA', loadComponent: () => import('./pages/experiments/experiments').then(m => m.Experiments) },
-  { path: 'sobre-mi', title: 'SOBRE MÍ / MATEO IGUA', loadComponent: () => import('./pages/about/about').then(m => m.About) },
-  { path: 'widget-demo', title: 'WIDGET DEMO / MATEO IGUA', loadComponent: () => import('./pages/widget-demo/widget-demo').then(m => m.WidgetDemo) },
-  { path: '**', title: '404 / MATEO IGUA', loadComponent: () => import('./pages/not-found/not-found').then(m => m.NotFound) },
+  { path: '', title: 'Mateo Igua', component: Portfolio },
+  { path: 'proyectos', redirectTo: toSection('projects') },
+  { path: 'experimentos', redirectTo: toSection('experiments') },
+  { path: 'sobre-mi', redirectTo: toSection('about') },
+  { path: 'widget-demo', redirectTo: '' }, // la demo de API se retiró
+  { path: '**', title: '404 · Mateo Igua', loadComponent: () => import('./pages/not-found/not-found').then(m => m.NotFound) },
 ];

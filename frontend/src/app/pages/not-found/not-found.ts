@@ -1,5 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { UI } from '../../data/ui';
+import { I18n } from '../../services/i18n';
 
 @Component({
   selector: 'app-not-found',
@@ -7,16 +9,17 @@ import { RouterLink } from '@angular/router';
   template: `
     <section class="hero">
       <div class="container">
-        <p class="hero-label" style="color: var(--error)">ERROR · RUTA NO ENCONTRADA</p>
+        <p class="hero-label is-error">{{ i18n.t(ui.nfLabel) }}</p>
         <h1 class="hero-title"><span class="accent">404</span></h1>
-        <p class="hero-tagline">
-          El recurso solicitado no existe en este sistema. Verifique la ruta o vuelva al INDEX.
-        </p>
+        <p class="hero-tagline">{{ i18n.t(ui.nfText) }}</p>
         <div class="hero-cta">
-          <a routerLink="/" class="btn btn--primary">← VOLVER AL HOME</a>
+          <a routerLink="/" class="btn btn--primary">{{ i18n.t(ui.nfBack) }}</a>
         </div>
       </div>
     </section>
   `,
 })
-export class NotFound {}
+export class NotFound {
+  protected readonly i18n = inject(I18n);
+  protected readonly ui = UI;
+}

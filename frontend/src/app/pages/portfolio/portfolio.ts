@@ -1,0 +1,275 @@
+import { Component, afterNextRender, computed, inject, signal } from '@angular/core';
+import { EXPERIMENTS, MARQUEE_WORDS, PROJECTS, STACK_CARDS } from '../../data/portfolio.data';
+import { ActivatedRoute } from '@angular/router';
+import { UI } from '../../data/ui';
+import { SectionNav } from '../../layout/section-nav';
+import { I18n } from '../../services/i18n';
+import { SECTIONS, SectionSpy } from '../../services/section-spy';
+import { BigStatement } from '../../shared/big-statement';
+import { Hero } from '../../shared/hero';
+import { Marquee } from '../../shared/marquee';
+
+// La página única: las antiguas Home, Proyectos, Experimentos y Sobre mí
+// ahora son secciones de este mismo componente. Cada <section>
+// lleva un id que coincide con SECTIONS (services/section-spy.ts); el menú de
+// la derecha (<app-section-nav>) las enlaza y resalta la que se está viendo.
+@Component({
+  selector: 'app-portfolio',
+  imports: [SectionNav, Hero, BigStatement, Marquee],
+  template: `
+    <app-section-nav />
+
+    <!-- 01 · INICIO -->
+    <div id="home" class="spy">
+      <app-hero [label]="i18n.t(ui.heroLabel)" top="MATEO" bottom="IGUA">
+        {{ i18n.t(ui.heroText) }}
+        <div cta class="hero-cta">
+          <a href="#projects" class="btn btn--primary" (click)="go($event, 'projects')">{{
+            i18n.t(ui.ctaProjects)
+          }}</a>
+          <a href="#about" class="btn btn--ghost" (click)="go($event, 'about')">{{
+            i18n.t(ui.ctaAbout)
+          }}</a>
+        </div>
+      </app-hero>
+    </div>
+
+    <!-- 02 · STACK -->
+    <section id="stack" class="section spy">
+      <div class="container">
+        <p class="section-label">{{ i18n.t(ui.stackLabel) }}</p>
+        <h2 class="section-title">{{ i18n.t(ui.stackTitle) }}</h2>
+
+        <div class="cards-grid">
+          @for (card of stack; track card.icon) {
+            <article class="card">
+              <p class="card-icon">{{ card.icon }}</p>
+              <h3 class="card-title">{{ i18n.t(card.title) }}</h3>
+              <div class="tag-list">
+                @for (tag of card.tags; track tag) {
+                  <span class="tag">{{ tag }}</span>
+                }
+              </div>
+              @if (card.interestedIn) {
+                <h4 class="card-subtitle">{{ i18n.t(ui.interestedIn) }}</h4>
+                <div class="tag-list">
+                  @for (tag of card.interestedIn; track tag) {
+                    <span class="tag">{{ tag }}</span>
+                  }
+                </div>
+              }
+            </article>
+          }
+        </div>
+
+        <h3 class="sub-title">{{ i18n.t(ui.nowTitle) }}</h3>
+        <p class="section-intro">{{ i18n.t(ui.nowText) }}</p>
+      </div>
+
+      <app-big-statement>
+        {{ i18n.t(ui.statementStackPre) }}<span class="accent">{{ i18n.t(ui.statementStackAccent) }}</span
+        >.
+      </app-big-statement>
+    </section>
+
+    <!-- 03 · PROYECTOS -->
+    <section id="projects" class="section spy">
+      <div class="container">
+        <p class="section-label">{{ i18n.t(ui.projectsLabel) }}</p>
+        <h2 class="section-title">{{ i18n.t(ui.projectsTitle) }}</h2>
+        <p class="section-intro">{{ i18n.t(ui.projectsIntro) }}</p>
+
+        <!-- Dos columnas 60 / 40: lista de proyectos (fecha · título · código) y, a la
+             derecha, la vista previa y la descripción del proyecto seleccionado. -->
+        <div class="project-split">
+          <ul class="project-list" [attr.aria-label]="i18n.t(ui.projectList)">
+            @for (p of projects; track p.id) {
+              <li
+                class="project-row"
+                [class.selected]="p.id === selected()"
+                (mouseenter)="selected.set(p.id)"
+              >
+                <span class="project-date">{{ p.updated }}</span>
+                <button
+                  type="button"
+                  class="project-title"
+                  [attr.aria-pressed]="p.id === selected()"
+                  (click)="selected.set(p.id)"
+                  (focus)="selected.set(p.id)"
+                >
+                  {{ i18n.t(p.name) }}
+                </button>
+                <a class="project-link" [href]="p.codeUrl" target="_blank" rel="noopener">{{
+                  i18n.t(ui.code)
+                }}</a>
+              </li>
+            }
+          </ul>
+
+          @let cur = current();
+          <aside class="project-detail" aria-live="polite">
+            <div class="project-preview">
+              @if (cur.image) {
+                <img [src]="cur.image" [alt]="i18n.t(cur.name)" loading="lazy" />
+              } @else {
+                <span class="project-logo">[{{ cur.id }}]</span>
+              }
+            </div>
+            <p class="card-icon">[{{ cur.id }}] · {{ i18n.t(cur.status) }}</p>
+            <h4 class="card-title">{{ i18n.t(cur.name).toUpperCase() }}</h4>
+            <p class="card-text">{{ i18n.t(cur.description) }}</p>
+            <div class="card-meta">
+              @for (tag of cur.tags; track $index; let last = $last) {
+                <span>{{ i18n.t(tag) }}</span>
+                @if (!last) {
+                  <span>·</span>
+                }
+              }
+            </div>
+          </aside>
+        </div>
+      </div>
+
+      <app-big-statement>
+        {{ i18n.t(ui.statementProjectsPre) }}<span class="accent">{{ i18n.t(ui.statementProjectsAccent) }}</span
+        >.
+      </app-big-statement>
+    </section>
+
+    <!-- 04 · EXPERIMENTOS -->
+    <section id="experiments" class="section spy">
+      <div class="container">
+        <p class="section-label">{{ i18n.t(ui.expLabel) }}</p>
+        <h2 class="section-title">{{ i18n.t(ui.expTitle) }}</h2>
+        <p class="section-intro">{{ i18n.t(ui.expIntro) }}</p>
+
+        <div class="cards-grid">
+          @for (e of experiments; track e.id) {
+            <article class="card">
+              <p class="card-icon">{{ e.id }}</p>
+              <h4 class="card-title">{{ e.title }}</h4>
+              <p class="card-text">{{ i18n.t(e.description) }}</p>
+              <div class="card-meta">
+                @for (tag of e.tags; track $index; let last = $last) {
+                  <span>{{ i18n.t(tag) }}</span>
+                  @if (!last) {
+                    <span>·</span>
+                  }
+                }
+              </div>
+            </article>
+          }
+        </div>
+
+        <div class="two-col legend">
+          <div>
+            <p class="section-label">{{ i18n.t(ui.legendLabel) }}</p>
+            <h3 class="sub-title sub-title--first">{{ i18n.t(ui.legendTitle) }}</h3>
+            <p class="section-intro">{{ i18n.t(ui.legendText) }}</p>
+          </div>
+          <div class="info-block">
+            <p class="info-block-header">{{ i18n.t(ui.statusHeader) }}</p>
+            <ul>
+              <li>{{ experiments.length.toString().padStart(2, '0') }} {{ i18n.t(ui.statusEntries) }}</li>
+              <li>{{ i18n.t(ui.statusSelfPublished) }}</li>
+              <li>{{ i18n.t(ui.statusNoWarranty) }}</li>
+              <li>{{ i18n.t(ui.statusOpenSource) }}</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <app-big-statement>
+        {{ i18n.t(ui.statementExpPre) }}<span class="accent">{{ i18n.t(ui.statementExpAccent) }}</span
+        >{{ i18n.t(ui.statementExpPost) }}
+      </app-big-statement>
+    </section>
+
+    <!-- 05 · SOBRE MÍ -->
+    <section id="about" class="section spy">
+      <div class="container">
+        <p class="section-label">{{ i18n.t(ui.aboutLabel) }}</p>
+        <h2 class="section-title">{{ i18n.t(ui.aboutTitle) }}</h2>
+        <p class="section-intro">{{ i18n.t(ui.aboutIntro) }}</p>
+
+        <div class="two-col">
+          <div class="prose">
+            <h3 class="sub-title sub-title--first">{{ i18n.t(ui.whoTitle) }}</h3>
+            <p>
+              {{ i18n.t(ui.whoP1Pre) }}<strong>Mateo Igua</strong>{{ i18n.t(ui.whoP1Post) }}
+            </p>
+            <p>
+              {{ i18n.t(ui.whoP2Pre) }}<strong>{{ i18n.t(ui.whoP2Strong) }}</strong
+              >{{ i18n.t(ui.whoP2Post) }}
+            </p>
+            <p>{{ i18n.t(ui.whoP3) }}</p>
+          </div>
+
+          <div class="info-block">
+            <p class="info-block-header">{{ i18n.t(ui.contact) }}</p>
+            <ul>
+              <li><a href="mailto:mateoigua.mg@gmail.com">EMAIL</a></li>
+              <li><a href="https://github.com/MateoIgua" target="_blank" rel="noopener">GITHUB</a></li>
+              <li>
+                <a
+                  href="https://www.linkedin.com/in/mateo-andr%C3%A9s-gonz%C3%A1lez-igua-640638208/"
+                  target="_blank"
+                  rel="noopener"
+                  >LINKEDIN</a
+                >
+              </li>
+            </ul>
+            <!-- La hoja de vida se descarga desde public/cv/Mateo-Igua-CV.pdf -->
+            <a class="btn btn--primary btn--block" href="cv/Mateo-Igua-CV.pdf" download="Mateo-Igua-CV.pdf">{{
+              i18n.t(ui.cvDownload)
+            }}</a>
+          </div>
+        </div>
+
+        <div class="info-block quote">
+          <p class="info-block-header">{{ i18n.t(ui.quoteHeader) }}</p>
+          <p class="quote-text">{{ i18n.t(ui.quote) }}</p>
+          <p class="mono dim quote-author">{{ i18n.t(ui.quoteAuthor) }}</p>
+        </div>
+      </div>
+
+      <app-big-statement>
+        {{ i18n.t(ui.statementAboutPre) }}<span class="accent">{{ i18n.t(ui.statementAboutAccent) }}</span
+        >{{ i18n.t(ui.statementAboutPost) }}
+      </app-big-statement>
+    </section>
+
+    <!-- Marquesina: aparece una sola vez, al final de la página -->
+    <app-marquee [words]="marqueeWords" />
+  `,
+})
+export class Portfolio {
+  protected readonly i18n = inject(I18n);
+  private readonly spy = inject(SectionSpy);
+  private readonly route = inject(ActivatedRoute);
+  protected readonly ui = UI;
+
+  protected readonly stack = STACK_CARDS;
+  protected readonly projects = PROJECTS;
+  // Proyecto seleccionado en la lista (al pasar el mouse, enfocar o tocar); computed lo busca.
+  protected readonly selected = signal(PROJECTS[0].id);
+  protected readonly current = computed(() => PROJECTS.find(p => p.id === this.selected()) ?? PROJECTS[0]);
+  protected readonly experiments = EXPERIMENTS;
+  protected readonly marqueeWords = MARQUEE_WORDS;
+
+  constructor() {
+    // Si se entra con una URL como /#projects (o desde /proyectos, que redirige
+    // ahí), baja hasta esa sección una vez pintada la página.
+    afterNextRender(() => {
+      const id = this.route.snapshot.fragment;
+      if (id && SECTIONS.some(s => s.id === id)) {
+        setTimeout(() => this.spy.scrollTo(id, false));
+      }
+    });
+  }
+
+  protected go(event: Event, id: string): void {
+    event.preventDefault();
+    this.spy.scrollTo(id);
+  }
+}

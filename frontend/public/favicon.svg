@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect width="64" height="64" rx="10" fill="#050706"/>
+  <rect x="1" y="1" width="62" height="62" rx="9" fill="none" stroke="#2e5f30" stroke-width="2"/>
+  <text x="32" y="43" text-anchor="middle" font-family="Consolas, 'Courier New', monospace" font-size="26" font-weight="700" textLength="52" lengthAdjust="spacingAndGlyphs"><tspan fill="#f4ff3a">[</tspan><tspan fill="#b8ffb8">MI</tspan><tspan fill="#f4ff3a">]</tspan></text>
+</svg>
