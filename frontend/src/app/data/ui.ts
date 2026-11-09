@@ -2,7 +2,7 @@ import { Localized } from '../models/portfolio.models';
 
 const l = (es: string, en: string = es): Localized => ({ es, en });
 
-// Textos fijos de la interfaz (los que no son "datos" como proyectos o skills).
+// Textos fijos de la interfaz (los que no son "datos" como proyectos o experimentos).
 // Para añadir un idioma habría que agregar una clave más a cada l(...) y a `Lang`.
 export const UI = {
   // Barra superior / pie
@@ -39,16 +39,10 @@ export const UI = {
     'Cosas que he construido mientras aprendo. Cada uno fue un experimento con un objetivo claro: entender un concepto, practicar un patrón, o simplemente hacer algo útil.',
     'Things I have built while learning. Each one was an experiment with a clear goal: understanding a concept, practicing a pattern, or simply making something useful.',
   ),
-  projectsTable: l('TABLA DE CONTROL', 'CONTROL TABLE'),
-  projectsCards: l('FICHAS', 'FILES'),
   code: l('→ CÓDIGO', '→ CODE'),
+  projectList: l('Lista de proyectos', 'Project list'),
   statementProjectsPre: l('CADA PROYECTO RESPONDE A UNA ', 'EVERY PROJECT ANSWERS A '),
   statementProjectsAccent: l('PREGUNTA', 'QUESTION'),
-  regTitle: l('PROJECT REGISTRY', 'PROJECT REGISTRY'),
-  regEntries: l('ENTRADAS', 'ENTRIES'),
-  regName: l('NOMBRE', 'NAME'),
-  regYear: l('AÑO', 'YEAR'),
-  regStatus: l('ESTADO', 'STATUS'),
 
   // Experimentos
   expLabel: l('LAB · PIEZAS CORTAS', 'LAB · SHORT PIECES'),
@@ -98,13 +92,7 @@ export const UI = {
     'Outside of code, I like understanding why things work: reading about patterns, seeing how other developers solve problems, and applying that to whatever I build next.',
   ),
   contact: l('CONTACTO', 'CONTACT'),
-  skillsLabel: l('CAPACIDADES', 'CAPABILITIES'),
-  skillsTitle: l('SKILL TABLE'),
-  skillsHeader: l('SKILL CONTROL · NIVEL Y CATEGORÍA', 'SKILL CONTROL · LEVEL AND CATEGORY'),
-  skName: l('NOMBRE', 'NAME'),
-  skCategory: l('CATEGORÍA', 'CATEGORY'),
-  skFocus: l('ENFOQUE', 'FOCUS'),
-  skLevel: l('NIVEL', 'LEVEL'),
+  cvDownload: l('DESCARGAR HOJA DE VIDA ↓', 'DOWNLOAD RÉSUMÉ ↓'),
   quoteHeader: l('EXTRACT FROM · CITA', 'EXTRACT FROM · QUOTE'),
   quote: l(
     '"La variedad de soluciones es infinita. Si hoy, cuando tenemos miles de bibliotecas distintas, podemos distinguir miles de patrones, mañana, cuando aparezcan nuevos paradigmas, podremos distinguir diez, veinte o treinta mil más — no de manera imitativa, sino para combinarlos según nuestra imaginación."',

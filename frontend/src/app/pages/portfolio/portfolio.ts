@@ -1,5 +1,5 @@
-import { Component, afterNextRender, inject } from '@angular/core';
-import { EXPERIMENTS, MARQUEE_WORDS, PROJECTS, SKILLS, STACK_CARDS } from '../../data/portfolio.data';
+import { Component, afterNextRender, computed, inject, signal } from '@angular/core';
+import { EXPERIMENTS, MARQUEE_WORDS, PROJECTS, STACK_CARDS } from '../../data/portfolio.data';
 import { ActivatedRoute } from '@angular/router';
 import { UI } from '../../data/ui';
 import { SectionNav } from '../../layout/section-nav';
@@ -8,7 +8,6 @@ import { SECTIONS, SectionSpy } from '../../services/section-spy';
 import { BigStatement } from '../../shared/big-statement';
 import { Hero } from '../../shared/hero';
 import { Marquee } from '../../shared/marquee';
-import { ProjectRegistry } from '../../shared/project-registry';
 
 // La página única: las antiguas Home, Proyectos, Experimentos y Sobre mí
 // ahora son secciones de este mismo componente. Cada <section>
@@ -16,7 +15,7 @@ import { ProjectRegistry } from '../../shared/project-registry';
 // la derecha (<app-section-nav>) las enlaza y resalta la que se está viendo.
 @Component({
   selector: 'app-portfolio',
-  imports: [SectionNav, Hero, BigStatement, Marquee, ProjectRegistry],
+  imports: [SectionNav, Hero, BigStatement, Marquee],
   template: `
     <app-section-nav />
 
@@ -80,30 +79,54 @@ import { ProjectRegistry } from '../../shared/project-registry';
         <h2 class="section-title">{{ i18n.t(ui.projectsTitle) }}</h2>
         <p class="section-intro">{{ i18n.t(ui.projectsIntro) }}</p>
 
-        <app-project-registry />
-
-        <h3 class="sub-title">{{ i18n.t(ui.projectsCards) }}</h3>
-        <div class="cards-grid">
-          @for (p of projects; track p.id) {
-            <article class="card">
-              <p class="card-icon">[{{ p.id }}] · {{ p.year }}</p>
-              <h4 class="card-title">{{ i18n.t(p.name).toUpperCase() }}</h4>
-              <p class="card-text">{{ i18n.t(p.description) }}</p>
-              <div class="card-meta">
-                @for (tag of p.tags; track $index; let last = $last) {
-                  <span>{{ i18n.t(tag) }}</span>
-                  @if (!last) {
-                    <span>·</span>
-                  }
-                }
-              </div>
-              <div class="card-links">
-                <a href="https://github.com/MateoIgua" target="_blank" rel="noopener">{{
+        <!-- Dos columnas 60 / 40: lista de proyectos (fecha · título · código) y, a la
+             derecha, la vista previa y la descripción del proyecto seleccionado. -->
+        <div class="project-split">
+          <ul class="project-list" [attr.aria-label]="i18n.t(ui.projectList)">
+            @for (p of projects; track p.id) {
+              <li
+                class="project-row"
+                [class.selected]="p.id === selected()"
+                (mouseenter)="selected.set(p.id)"
+              >
+                <span class="project-date">{{ p.updated }}</span>
+                <button
+                  type="button"
+                  class="project-title"
+                  [attr.aria-pressed]="p.id === selected()"
+                  (click)="selected.set(p.id)"
+                  (focus)="selected.set(p.id)"
+                >
+                  {{ i18n.t(p.name) }}
+                </button>
+                <a class="project-link" [href]="p.codeUrl" target="_blank" rel="noopener">{{
                   i18n.t(ui.code)
                 }}</a>
-              </div>
-            </article>
-          }
+              </li>
+            }
+          </ul>
+
+          @let cur = current();
+          <aside class="project-detail" aria-live="polite">
+            <div class="project-preview">
+              @if (cur.image) {
+                <img [src]="cur.image" [alt]="i18n.t(cur.name)" loading="lazy" />
+              } @else {
+                <span class="project-logo">[{{ cur.id }}]</span>
+              }
+            </div>
+            <p class="card-icon">[{{ cur.id }}] · {{ i18n.t(cur.status) }}</p>
+            <h4 class="card-title">{{ i18n.t(cur.name).toUpperCase() }}</h4>
+            <p class="card-text">{{ i18n.t(cur.description) }}</p>
+            <div class="card-meta">
+              @for (tag of cur.tags; track $index; let last = $last) {
+                <span>{{ i18n.t(tag) }}</span>
+                @if (!last) {
+                  <span>·</span>
+                }
+              }
+            </div>
+          </aside>
         </div>
       </div>
 
@@ -196,34 +219,11 @@ import { ProjectRegistry } from '../../shared/project-registry';
                 >
               </li>
             </ul>
+            <!-- La hoja de vida se descarga desde public/cv/Mateo-Igua-CV.pdf -->
+            <a class="btn btn--primary btn--block" href="cv/Mateo-Igua-CV.pdf" download="Mateo-Igua-CV.pdf">{{
+              i18n.t(ui.cvDownload)
+            }}</a>
           </div>
-        </div>
-
-        <h3 class="sub-title">{{ i18n.t(ui.skillsTitle) }}</h3>
-        <div class="terminal-table">
-          <div class="terminal-table-header">{{ i18n.t(ui.skillsHeader) }}</div>
-          <table>
-            <thead>
-              <tr>
-                <th class="col-id">ID</th>
-                <th>{{ i18n.t(ui.skName) }}</th>
-                <th>{{ i18n.t(ui.skCategory) }}</th>
-                <th>{{ i18n.t(ui.skFocus) }}</th>
-                <th class="col-status">{{ i18n.t(ui.skLevel) }}</th>
-              </tr>
-            </thead>
-            <tbody>
-              @for (s of skills; track s.id) {
-                <tr>
-                  <td class="col-id">{{ s.id }}</td>
-                  <td>{{ s.name }}</td>
-                  <td>{{ i18n.t(s.category) }}</td>
-                  <td>{{ i18n.t(s.focus) }}</td>
-                  <td class="col-status">{{ i18n.t(s.level) }}</td>
-                </tr>
-              }
-            </tbody>
-          </table>
         </div>
 
         <div class="info-block quote">
@@ -251,8 +251,10 @@ export class Portfolio {
 
   protected readonly stack = STACK_CARDS;
   protected readonly projects = PROJECTS;
+  // Proyecto seleccionado en la lista (al pasar el mouse, enfocar o tocar); computed lo busca.
+  protected readonly selected = signal(PROJECTS[0].id);
+  protected readonly current = computed(() => PROJECTS.find(p => p.id === this.selected()) ?? PROJECTS[0]);
   protected readonly experiments = EXPERIMENTS;
-  protected readonly skills = SKILLS;
   protected readonly marqueeWords = MARQUEE_WORDS;
 
   constructor() {

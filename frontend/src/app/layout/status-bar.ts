@@ -5,7 +5,7 @@ import { UI } from '../data/ui';
 import { I18n, Lang } from '../services/i18n';
 import { SectionSpy } from '../services/section-spy';
 
-// Barra superior fija: marca, "ruta" de la sección actual, reloj y selector de idioma.
+// Barra superior fija: marca (izquierda), reloj (centro, fijo) y selector de idioma (derecha).
 // timer(0, 1000) emite cada segundo; toSignal lo convierte en un signal que la
 // plantilla lee con clock(). Angular cancela la suscripción al destruir el componente.
 @Component({
@@ -16,12 +16,6 @@ import { SectionSpy } from '../services/section-spy';
         <a href="#home" class="brand" (click)="goHome($event)">
           <span class="bracket">[</span>MI<span class="bracket">]</span>
         </a>
-
-        <div class="statusbar-cell statusbar-path">
-          <span class="label">cd:</span>
-          <span class="value">~/{{ spy.active() }}</span>
-          <span class="cursor"></span>
-        </div>
 
         <div class="statusbar-cell statusbar-time">
           <span class="label">TIME:</span>

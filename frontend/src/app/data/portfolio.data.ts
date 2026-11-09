@@ -1,4 +1,4 @@
-import { Experiment, Localized, Project, Skill, StackCard } from '../models/portfolio.models';
+import { Experiment, Localized, Project, StackCard } from '../models/portfolio.models';
 
 // Datos de contenido. Viven en UN solo lugar y las plantillas los recorren con @for.
 // `l(es, en)` crea un texto bilingüe; si no se pasa `en`, el mismo texto sirve
@@ -8,9 +8,15 @@ const l = (es: string, en: string = es): Localized => ({ es, en });
 const ACTIVE = l('ACTIVO', 'ACTIVE');
 const ARCHIVED = l('ARCHIVO', 'ARCHIVED');
 
+// `updated` es la fecha de la última modificación del proyecto (AAAA-MM-DD). Por ahora solo
+// se conoce el año; reemplázalo por la fecha real. `codeUrl` apunta al perfil de GitHub hasta
+// tener el enlace del repositorio de cada proyecto. `image` (opcional) es la vista previa:
+// pon el archivo en public/projects/ y escribe 'projects/nombre.png'.
+const GITHUB = 'https://github.com/MateoIgua';
+
 export const PROJECTS: Project[] = [
   {
-    id: 'A', name: l('Servidor de Cotización', 'Quote Server'), stack: l('C# · ASP.NET CORE'), year: 2025, status: ACTIVE,
+    id: 'A', name: l('Servidor de Cotización', 'Quote Server'), status: ACTIVE, updated: '2025', codeUrl: GITHUB,
     description: l(
       'Servicio backend en C# para gestionar cotizaciones, con persistencia y endpoints REST. Práctica de arquitectura por capas y separación de responsabilidades.',
       'Backend service in C# to manage quotes, with persistence and REST endpoints. Practice of layered architecture and separation of concerns.',
@@ -18,7 +24,7 @@ export const PROJECTS: Project[] = [
     tags: [l('C#'), l('ASP.NET CORE'), l('REST')],
   },
   {
-    id: 'B', name: l('Práctica Refactor', 'Refactoring Practice'), stack: l('C# · SOLID'), year: 2025, status: ACTIVE,
+    id: 'B', name: l('Práctica Refactor', 'Refactoring Practice'), status: ACTIVE, updated: '2025', codeUrl: GITHUB,
     description: l(
       'Ejercicios de refactorización aplicando principios SOLID y patrones de diseño sobre código legado. Foco en testabilidad y nombrado.',
       'Refactoring exercises applying SOLID principles and design patterns to legacy code. Focus on testability and naming.',
@@ -26,7 +32,7 @@ export const PROJECTS: Project[] = [
     tags: [l('C#'), l('SOLID'), l('PATRONES', 'PATTERNS')],
   },
   {
-    id: 'C', name: l('Sistema Parqueadero', 'Parking System'), stack: l('C# · OOP'), year: 2024, status: ARCHIVED,
+    id: 'C', name: l('Sistema Parqueadero', 'Parking System'), status: ARCHIVED, updated: '2024', codeUrl: GITHUB,
     description: l(
       'Aplicación de consola para gestionar ingreso y salida de vehículos en un parqueadero, calculando tarifas por tiempo. Práctica de OOP clásico.',
       'Console application to manage vehicle entry and exit in a parking lot, calculating fees by time. Classic OOP practice.',
@@ -34,7 +40,7 @@ export const PROJECTS: Project[] = [
     tags: [l('C#'), l('CONSOLA', 'CONSOLE'), l('OOP')],
   },
   {
-    id: 'D', name: l('Logs Pruebas', 'Test Logs'), stack: l('C# · CONSOLA', 'C# · CONSOLE'), year: 2024, status: ARCHIVED,
+    id: 'D', name: l('Logs Pruebas', 'Test Logs'), status: ARCHIVED, updated: '2024', codeUrl: GITHUB,
     description: l(
       'Sandbox de pruebas y experimentos cortos con C#. Notas y snippets para no perder lo aprendido en ejercicios sueltos.',
       'Sandbox of tests and short experiments with C#. Notes and snippets so nothing learned in loose exercises gets lost.',
@@ -92,18 +98,6 @@ export const EXPERIMENTS: Experiment[] = [
     ),
     tags: [l('C#'), l('REGEX')],
   },
-];
-
-export const SKILLS: Skill[] = [
-  { id: 1, name: 'C#', category: l('LENGUAJE', 'LANGUAGE'), focus: l('BACKEND'), level: l('SÓLIDO', 'SOLID') },
-  { id: 2, name: '.NET / ASP.NET CORE', category: l('FRAMEWORK'), focus: l('API · WEB'), level: l('EN CURSO', 'IN PROGRESS') },
-  { id: 3, name: 'SQL', category: l('CONSULTAS', 'QUERY'), focus: l('DATOS', 'DATA'), level: l('SÓLIDO', 'SOLID') },
-  { id: 4, name: 'EF CORE', category: l('ORM'), focus: l('PERSISTENCIA', 'PERSISTENCE'), level: l('EN CURSO', 'IN PROGRESS') },
-  { id: 5, name: 'OOP / SOLID', category: l('DISEÑO', 'DESIGN'), focus: l('ARQUITECTURA', 'ARCHITECTURE'), level: l('PRACTICANDO', 'PRACTICING') },
-  { id: 6, name: 'HTML / CSS', category: l('FRONTEND'), focus: l('UI'), level: l('BÁSICO', 'BASIC') },
-  { id: 7, name: 'GIT', category: l('HERRAMIENTA', 'TOOL'), focus: l('VERSIONADO', 'VERSIONING'), level: l('EN CURSO', 'IN PROGRESS') },
-  { id: 8, name: 'BLAZOR', category: l('FRAMEWORK'), focus: l('FRONTEND C#'), level: l('EXPLORANDO', 'EXPLORING') },
-  { id: 9, name: 'ANGULAR', category: l('FRAMEWORK'), focus: l('FRONTEND TS'), level: l('EXPLORANDO', 'EXPLORING') },
 ];
 
 export const STACK_CARDS: StackCard[] = [

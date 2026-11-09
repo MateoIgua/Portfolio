@@ -9,10 +9,10 @@ const toSection = (id: string) => () => inject(Router).parseUrl(`/#${id}`);
 // Tabla de rutas: URL → componente. Ahora el sitio es UNA página con secciones;
 // solo la ruta "no encontrada" se carga de forma perezosa (loadComponent).
 export const routes: Routes = [
-  { path: '', title: 'MATEO IGUA / DEV TERMINAL', component: Portfolio },
+  { path: '', title: 'Mateo Igua', component: Portfolio },
   { path: 'proyectos', redirectTo: toSection('projects') },
   { path: 'experimentos', redirectTo: toSection('experiments') },
   { path: 'sobre-mi', redirectTo: toSection('about') },
   { path: 'widget-demo', redirectTo: '' }, // la demo de API se retiró
-  { path: '**', title: '404 / MATEO IGUA', loadComponent: () => import('./pages/not-found/not-found').then(m => m.NotFound) },
+  { path: '**', title: '404 · Mateo Igua', loadComponent: () => import('./pages/not-found/not-found').then(m => m.NotFound) },
 ];

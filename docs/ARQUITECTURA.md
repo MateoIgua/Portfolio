@@ -45,12 +45,12 @@ src/
     ├── app.ts               componente raíz: dot-background + status-bar + <router-outlet> + footer
     ├── app.config.ts        providers globales (router, HttpClient)
     ├── app.routes.ts        '' → Portfolio; URL antiguas → /#seccion; '**' → 404
-    ├── models/              interfaces TypeScript (Localized, Project, Skill…)
+    ├── models/              interfaces TypeScript (Localized, Project, Experiment…)
     ├── data/                portfolio.data.ts (contenido bilingüe) y ui.ts (textos de la interfaz)
     ├── services/            I18n (idioma), SectionSpy (sección activa), PortfolioApiService, API_BASE
     ├── layout/              status-bar (marca, ruta, reloj, idioma), section-nav (menú derecho),
     │                        footer, dot-background
-    ├── shared/              hero, marquee, big-statement, project-registry
+    ├── shared/              hero, marquee, big-statement
     └── pages/               portfolio (la página única), not-found
 ```
 
@@ -68,7 +68,8 @@ src/
 | (no existía) fondo de puntos que reacciona al mouse | `layout/dot-background.ts` |
 | `<section class="hero">` | `shared/hero.ts` (solo en el inicio) |
 | `<div class="marquee">` (una por página) | `shared/marquee.ts`, una sola vez al final de la página |
-| tabla "PROJECT REGISTRY" | `shared/project-registry.ts` |
+| tabla "PROJECT REGISTRY" y tarjetas de proyectos | Lista fecha · título · código + panel de vista previa, dentro de `portfolio.ts` |
+| tabla de skills | Retirada |
 | tarjetas escritas a mano | `@for` sobre `data/portfolio.data.ts` |
 | `assets/js/api-client.js` | `services/portfolio-api.service.ts` (sin uso en la interfaz por ahora) |
 
@@ -79,7 +80,7 @@ Las URL antiguas (`/proyectos`, `/experimentos`, `/sobre-mi`) redirigen a la sec
 
 - **CSS global.** Se reutilizó el CSS original en `styles.css`; el foco está en aprender Angular. Una
   evolución natural (ejercicio) es mover estilos a cada componente.
-- **Contenido como datos, en dos idiomas.** Proyectos, experimentos, skills y stack están en
+- **Contenido como datos, en dos idiomas.** Proyectos, experimentos y stack están en
   `data/portfolio.data.ts`; cada texto es `{ es, en }`. Los textos fijos están en `data/ui.ts`.
   `I18n.t()` elige el del idioma activo (señal), así que cambiar de idioma repinta sin recargar.
 - **Menú lateral con scroll-spy.** Se escucha el `scroll` y se calcula la sección activa
@@ -87,8 +88,15 @@ Las URL antiguas (`/proyectos`, `/experimentos`, `/sobre-mi`) redirigen a la sec
 - **Marquesina única.** La cinta de tecnologías aparece una sola vez, al final de la página.
 - **Favicon.** `public/favicon.svg` dibuja el `[MI]` de la barra superior; `favicon-64.png` es el respaldo para
   navegadores sin soporte de favicon SVG.
-- **Móvil.** Hasta 720 px: menú de marcas táctiles, reloj oculto, botones a ancho completo y tablas
-  con desplazamiento horizontal.
+- **Proyectos 60 / 40.** Lista de filas (fecha de última modificación · título · enlace al código) a la
+  izquierda y, a la derecha, vista previa + descripción del proyecto seleccionado. Si el proyecto no
+  tiene `image`, el panel muestra su id como logo. Los datos están en `PROJECTS` (`updated`,
+  `codeUrl`, `image`).
+- **Hoja de vida.** El botón del bloque de contacto descarga `cv/Mateo-Igua-CV.pdf`; el archivo vive en
+  `frontend/public/cv/` (cámbialo por tu PDF).
+- **Título de la pestaña.** "Mateo Igua" (`index.html` y `app.routes.ts`).
+- **Móvil.** Hasta 720 px: menú de marcas táctiles (la etiqueta aparece sobre cada línea al tocar),
+  reloj oculto, botones a ancho completo y proyectos en una sola columna.
 - **Componentes standalone.** No hay `NgModule`; cada componente declara lo que usa en `imports`.
 
 ## Backend (`backend/`)

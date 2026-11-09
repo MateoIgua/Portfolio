@@ -10,11 +10,12 @@ export interface Localized {
 export interface Project {
   id: string;
   name: Localized;
-  stack: Localized;
-  year: number;
   status: Localized;
+  updated: string; // fecha de la última modificación (AAAA-MM-DD)
+  codeUrl: string; // enlace al código
   description: Localized;
   tags: Localized[];
+  image?: string; // vista previa: ruta dentro de public/, p. ej. 'projects/a.png'
 }
 
 export interface Experiment {
@@ -22,14 +23,6 @@ export interface Experiment {
   title: string;
   description: Localized;
   tags: Localized[];
-}
-
-export interface Skill {
-  id: number;
-  name: string;
-  category: Localized;
-  focus: Localized;
-  level: Localized;
 }
 
 export interface StackCard {

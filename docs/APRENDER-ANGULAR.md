@@ -153,7 +153,7 @@ El sitio ahora es **una sola página con secciones** (inicio, stack, proyectos, 
 const toSection = (id: string) => () => inject(Router).parseUrl(`/#${id}`);
 
 export const routes: Routes = [
-  { path: '', title: 'MATEO IGUA / DEV TERMINAL', component: Portfolio },
+  { path: '', title: 'Mateo Igua', component: Portfolio },
   { path: 'proyectos', redirectTo: toSection('projects') },   // URL antigua → /#projects
   …
   { path: '**', title: '404 / MATEO IGUA', loadComponent: () => import('./pages/not-found/not-found').then(m => m.NotFound) },
@@ -179,8 +179,9 @@ Los ids salen de la lista `SECTIONS` (`services/section-spy.ts`), que también g
 **Menú que se repliega a la derecha** (`layout/section-nav.ts`):
 
 - Es una barra `position: fixed` a la derecha con una marca por sección. La activa se resalta
-  (marca larga y etiqueta en amarillo); las demás quedan con `opacity: .35`. Al pasar el mouse o
-  enfocar con teclado, todas las etiquetas se despliegan.
+  (marca larga y etiqueta en amarillo); las demás quedan con `opacity: .35`. La etiqueta va **encima
+  de la línea** (`position: absolute`, así mostrarla u ocultarla no mueve nada). Al pasar el mouse o
+  enfocar con teclado, todas las etiquetas se muestran.
 - Para saber qué sección se ve, escucha el `scroll` (dentro de `afterNextRender`) y llama a
   `SectionSpy.refresh()`: la activa es la última sección cuyo borde superior ya pasó el 40 % de la
   ventana. Al final de la página, siempre la última.
@@ -207,7 +208,27 @@ repetirse en cada una.
 
 **Diseño móvil.** Todo está en `styles.css` (sección "Responsive"): en pantallas de hasta 720 px el
 menú lateral queda como marcas táctiles, el reloj se oculta, los botones ocupan todo el ancho y las
-tablas se desplazan en horizontal dentro de su recuadro.
+los proyectos pasan a una sola columna.
+
+**Lista de proyectos con panel (60 / 40).** En `portfolio.ts`:
+
+```ts
+protected readonly selected = signal(PROJECTS[0].id);
+protected readonly current = computed(() => PROJECTS.find(p => p.id === this.selected()) ?? PROJECTS[0]);
+```
+
+```html
+<li class="project-row" (mouseenter)="selected.set(p.id)"> … </li>
+@let cur = current();
+<aside class="project-detail"> {{ i18n.t(cur.description) }} </aside>
+```
+
+- `selected` es una **señal**; `current` es un `computed` que busca el proyecto. Al pasar el mouse,
+  enfocar el título o tocarlo, `selected.set(...)` cambia y el panel se repinta solo.
+- `@let` guarda un valor en una variable de plantilla para no repetir `current()`.
+- `@if (cur.image) { <img …> } @else { … }`: si el proyecto tiene `image` (ruta dentro de `public/`),
+  se muestra; si no, el panel dibuja el id como logo.
+- La rejilla `grid-template-columns: 3fr 2fr` da la proporción 60 / 40; en móvil pasa a una columna.
 
 ## 8. Servicios e inyección de dependencias
 
@@ -322,7 +343,7 @@ Detalles que vale la pena notar:
 ## Ejercicios (de fácil a difícil)
 
 1. **Agregar un proyecto.** Añade un objeto en `PROJECTS` (`data/portfolio.data.ts`) con sus textos en
-   los dos idiomas. Verifica que aparece en la tabla y en las fichas, y que el contador `05 ENTRIES` cambia.
+   los dos idiomas. Verifica que aparece en la lista de proyectos y que, al seleccionarlo, el panel derecho muestra sus datos.
 2. **Nueva sección "Contacto".** Agrega un `<section id="contact">` en `portfolio.ts` y una entrada
    en `SECTIONS` (`services/section-spy.ts`): el menú lateral la incluye solo. Añade sus textos a `ui.ts`.
 3. **Interactividad con eventos.** En la sección Experimentos, añade botones de filtro por etiqueta (`C#`, `LINQ`…).
@@ -333,7 +354,7 @@ Detalles que vale la pena notar:
 5. **Estilos encapsulados.** Mueve las reglas de `.marquee` desde `styles.css` a `marquee.ts` usando
    `styles: [...]`. Observa en las DevTools los atributos `_ngcontent-*` que Angular añade.
 6. **Pipe propio.** Crea un pipe `padZero` que reemplace `length.toString().padStart(2, '0')`
-   (aparece en `project-registry.ts` y `portfolio.ts`).
+   (aparece en `portfolio.ts`).
 7. **Formulario.** Una página con formulario de contacto usando `FormsModule` o formularios reactivos
    (`@angular/forms` ya está instalado).
 8. **Tests.** Añade una prueba para `Marquee` (`npm test`; el proyecto se generó sin tests).
