@@ -13,6 +13,6 @@ export const routes: Routes = [
   { path: 'proyectos', redirectTo: toSection('projects') },
   { path: 'experimentos', redirectTo: toSection('experiments') },
   { path: 'sobre-mi', redirectTo: toSection('about') },
-  { path: 'widget-demo', redirectTo: toSection('api') },
+  { path: 'widget-demo', redirectTo: '' }, // la demo de API se retiró
   { path: '**', title: '404 / MATEO IGUA', loadComponent: () => import('./pages/not-found/not-found').then(m => m.NotFound) },
 ];

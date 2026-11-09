@@ -15,8 +15,8 @@
                                   GET /api/hello/now
 ```
 
-El sitio es 100 % contenido estático; el backend solo lo usa la página `widget-demo` como ejemplo
-de integración frontend ↔ API.
+El sitio es 100 % contenido estático: hoy ninguna pantalla llama al backend. La API y el servicio de
+Angular que la consume (`PortfolioApiService`) se conservan listos para futuros widgets.
 
 ## Versión HTML de revisión (`frontend-html/`)
 
@@ -32,13 +32,13 @@ footer) está copiado en varios HTML. Cambiar un dato implica editar varios arch
 
 ## Frontend Angular (`frontend/`)
 
-El sitio es **una sola página** con seis secciones (inicio, stack, proyectos, experimentos, sobre mí y
-API), un menú vertical fijo a la derecha que resalta la sección visible, selector de idioma ES/EN y
+El sitio es **una sola página** con cinco secciones (inicio, stack, proyectos, experimentos y sobre
+mí), un menú vertical fijo a la derecha que resalta la sección visible, selector de idioma ES/EN y
 diseño adaptable a móvil.
 
 ```
 src/
-├── index.html               única página HTML; contiene <app-root>
+├── index.html               única página HTML; contiene <app-root> (favicon en public/favicon.svg)
 ├── styles.css               reset + estilos globales (incluye el menú lateral y el responsive)
 ├── main.ts                  arranque: bootstrapApplication(App, appConfig)
 └── app/
@@ -51,14 +51,15 @@ src/
     ├── layout/              status-bar (marca, ruta, reloj, idioma), section-nav (menú derecho),
     │                        footer, dot-background
     ├── shared/              hero, marquee, big-statement, project-registry
-    └── pages/               portfolio (la página única), widget-demo (contenido de la sección API), not-found
+    └── pages/               portfolio (la página única), not-found
 ```
 
 ### Mapa HTML original → Angular
 
 | Antes | Ahora |
 |---|---|
-| `index.html`, `proyectos.html`, `experimentos.html`, `sobre-mi.html`, `widget-demo.html` | Una sección cada una dentro de `pages/portfolio/portfolio.ts` (`#home`, `#stack`, `#projects`, `#experiments`, `#about`, `#api`) |
+| `index.html`, `proyectos.html`, `experimentos.html`, `sobre-mi.html` | Una sección cada una dentro de `pages/portfolio/portfolio.ts` (`#home`, `#stack`/`#projects`, `#experiments`, `#about`) |
+| `widget-demo.html` | Retirada (la demo de API ya no está en el sitio) |
 | `404.html` | `pages/not-found/not-found.ts` en `**` |
 | `<header class="statusbar">` + `main.js` (reloj) | `layout/status-bar.ts` |
 | `<nav>` copiado en cada HTML | `layout/section-nav.ts`: menú lateral derecho con scroll-spy |
@@ -66,13 +67,13 @@ src/
 | (no existía) selector de idioma | `services/i18n.ts` + `data/ui.ts` |
 | (no existía) fondo de puntos que reacciona al mouse | `layout/dot-background.ts` |
 | `<section class="hero">` | `shared/hero.ts` (solo en el inicio) |
-| `<div class="marquee">` | `shared/marquee.ts` |
+| `<div class="marquee">` (una por página) | `shared/marquee.ts`, una sola vez al final de la página |
 | tabla "PROJECT REGISTRY" | `shared/project-registry.ts` |
 | tarjetas escritas a mano | `@for` sobre `data/portfolio.data.ts` |
-| `assets/js/api-client.js` | `services/portfolio-api.service.ts` |
+| `assets/js/api-client.js` | `services/portfolio-api.service.ts` (sin uso en la interfaz por ahora) |
 
-Las URL antiguas (`/proyectos`, `/experimentos`, `/sobre-mi`, `/widget-demo`) redirigen a la sección
-equivalente (`/#projects`, …).
+Las URL antiguas (`/proyectos`, `/experimentos`, `/sobre-mi`) redirigen a la sección equivalente
+(`/#projects`, …); `/widget-demo` redirige al inicio.
 
 ### Decisiones de diseño
 
@@ -83,7 +84,9 @@ equivalente (`/#projects`, …).
   `I18n.t()` elige el del idioma activo (señal), así que cambiar de idioma repinta sin recargar.
 - **Menú lateral con scroll-spy.** Se escucha el `scroll` y se calcula la sección activa
   (`SectionSpy.refresh()`); el resultado es una señal que leen el menú y la barra superior.
-- **Sección API con `@defer`.** `widget-demo` se carga (y llama a la API) solo al acercarse a la pantalla.
+- **Marquesina única.** La cinta de tecnologías aparece una sola vez, al final de la página.
+- **Favicon.** `public/favicon.svg` dibuja el `[MI]` de la barra superior; `favicon-64.png` es el respaldo para
+  navegadores sin soporte de favicon SVG.
 - **Móvil.** Hasta 720 px: menú de marcas táctiles, reloj oculto, botones a ancho completo y tablas
   con desplazamiento horizontal.
 - **Componentes standalone.** No hay `NgModule`; cada componente declara lo que usa en `imports`.
@@ -103,7 +106,8 @@ Si cambias de puerto o publicas en otro dominio, agrégalo ahí.
 
 ## URL del backend
 
-`frontend/src/app/services/api.config.ts` define el token `API_BASE`:
+`frontend/src/app/services/api.config.ts` define el token `API_BASE` (hoy lo usa solo
+`PortfolioApiService`, que ninguna pantalla consume):
 
 - en `localhost` / `127.0.0.1` → `http://localhost:5050`
 - en cualquier otro host → `https://TU-BACKEND-EN-PRODUCCION.com` (**pendiente**: poner la URL real

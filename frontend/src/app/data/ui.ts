@@ -8,7 +8,6 @@ export const UI = {
   // Barra superior / pie
   langLabel: l('Idioma', 'Language'),
   railLabel: l('Secciones de la página', 'Page sections'),
-  footerBuilt: l('BUILT WITH ANGULAR'),
   footerUpdate: l('v3.0 · ÚLTIMA ACTUALIZACIÓN 2026-10-31', 'v3.0 · LAST UPDATE 2026-10-31'),
 
   // Inicio
@@ -115,29 +114,6 @@ export const UI = {
   statementAboutPre: l('ESCRIBIR CÓDIGO ES ', 'WRITING CODE IS '),
   statementAboutAccent: l('PENSAR', 'THINKING'),
   statementAboutPost: l(' CLARO POR ESCRITO.', ' CLEARLY IN WRITING.'),
-
-  // API (widget demo)
-  apiLabel: l('FRONTEND ↔ BACKEND'),
-  apiTitle: l('WIDGET DEMO'),
-  apiIntro: l(
-    'Esta sección llama al backend (Portfolio.Api) y muestra la respuesta. Si ves los recuadros con datos abajo, la integración funciona.',
-    'This section calls the backend (Portfolio.Api) and shows the response. If you see the boxes below filled with data, the integration works.',
-  ),
-  apiBackendAt: l('Backend:', 'Backend:'),
-  apiLoading: l('CARGANDO...', 'LOADING...'),
-  apiWaiting: l('[esperando respuesta del servidor]', '[waiting for the server response]'),
-  apiError: l('✗ ERROR'),
-  apiCheck: l('Verifica que el backend esté disponible en', 'Check that the backend is available at'),
-  apiHowLabel: l('CÓMO REUSAR', 'HOW TO REUSE'),
-  apiHowTitle: l('PATRÓN', 'PATTERN'),
-  apiHowIntro: l(
-    'Mira el código de esta sección y de services/portfolio-api.service.ts. Para crear tus propios widgets:',
-    'Look at the code of this section and of services/portfolio-api.service.ts. To create your own widgets:',
-  ),
-  apiStep1: l('Agrega un endpoint en backend/Controllers/', 'Add an endpoint in backend/Controllers/'),
-  apiStep2: l('Agrega un método (y su interface) en PortfolioApiService', 'Add a method (and its interface) in PortfolioApiService'),
-  apiStep3: l('En un componente, crea un rxResource que llame a ese método', 'In a component, create an rxResource that calls that method'),
-  apiStep4: l('En la plantilla, usa @if con isLoading(), error() y value()', 'In the template, use @if with isLoading(), error() and value()'),
 
   // 404
   nfLabel: l('ERROR · RUTA NO ENCONTRADA', 'ERROR · ROUTE NOT FOUND'),

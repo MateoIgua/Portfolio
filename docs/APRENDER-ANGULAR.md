@@ -15,7 +15,7 @@ Con el servidor corriendo, cada cambio que guardes se refleja al instante.
 5. `app.routes.ts` (rutas y redirecciones)
 6. `services/i18n.ts` + `data/ui.ts` (idioma ES/EN con señales)
 7. `layout/status-bar.ts` (señales + RxJS) y `layout/section-nav.ts` (menú lateral)
-8. `services/` y `pages/widget-demo/widget-demo.ts` (HTTP)
+8. `services/portfolio-api.service.ts` (HTTP; hoy ninguna pantalla lo usa, ver ejercicio 12)
 
 ---
 
@@ -68,7 +68,7 @@ usaban `NgModule`; hoy ya no hace falta.)
 | `[prop]="expr"` | Enlazar una propiedad (datos → hijo/DOM) | `<app-marquee [words]="tech" />` |
 | `(evento)="fn()"` | Escuchar un evento (no hay ejemplo aún; ver ejercicio 3) | `(click)="…"` |
 | `@for` | Repetir | tarjetas de `portfolio.ts` |
-| `@if / @else` | Condicional | estados del widget en `widget-demo.ts` |
+| `@if / @else` | Condicional | `@if (card.interestedIn)` en `portfolio.ts` |
 | `\| pipe` | Transformar para mostrar | `{{ hello.value() \| json }}` |
 
 ### `@for` y el `track`
@@ -87,11 +87,14 @@ poner el separador `·` después de la última etiqueta).
 
 ### `@if`
 
-En `widget-demo.ts` hay tres estados mutuamente excluyentes:
+En `portfolio.ts`, cada tarjeta del stack muestra el bloque "Interesado en:" solo si el dato existe:
 
 ```html
-@if (hello.isLoading()) { … } @else if (hello.error()) { … } @else { … }
+@if (card.interestedIn) { … }
 ```
+
+`@if` admite `@else if` y `@else` para estados mutuamente excluyentes (por ejemplo cargando / error /
+datos, ver `rxResource` más abajo).
 
 ## 4. Datos tipados: `models/` y `data/`
 
@@ -144,8 +147,7 @@ el bucle infinito de la animación. Si `words` cambia, `looped` se recalcula aut
 
 ## 7. Rutas
 
-El sitio ahora es **una sola página con secciones** (inicio, stack, proyectos, experimentos, sobre mí
-y API). `app.routes.ts`:
+El sitio ahora es **una sola página con secciones** (inicio, stack, proyectos, experimentos y sobre mí). `app.routes.ts`:
 
 ```ts
 const toSection = (id: string) => () => inject(Router).parseUrl(`/#${id}`);
@@ -187,8 +189,8 @@ Los ids salen de la lista `SECTIONS` (`services/section-spy.ts`), que también g
 - Al hacer clic, `SectionSpy.scrollTo(id)` usa `scrollIntoView({ behavior: 'smooth' })`; el CSS
   `scroll-margin-top` evita que la barra superior tape el título.
 
-**`@defer`.** La sección API usa `@defer (on viewport) { <app-widget-demo /> }`: el componente y sus
-llamadas HTTP solo se cargan cuando la sección se acerca a la pantalla.
+**Marquesina.** `<app-marquee>` aparece una sola vez, después de la última sección, en vez de
+repetirse en cada una.
 
 ## 7c. Idioma ES / EN (`services/i18n.ts`, `data/ui.ts`)
 
@@ -246,15 +248,23 @@ clock = toSignal(timer(0, 1000).pipe(map(() => new Date().toLocaleTimeString('en
 Compara con `main.js` original: `setInterval` + `getElementById` + `textContent`. Aquí solo declaras
 "el reloj es esto" y la plantilla muestra `{{ clock() }}`. Angular limpia la suscripción solo.
 
-### `rxResource` — `pages/widget-demo/widget-demo.ts`
+### `rxResource` — patrón para llamar a la API
+
+La pantalla de demostración que lo usaba se retiró del sitio, pero `PortfolioApiService` sigue
+disponible. Así se usaría en un componente:
 
 ```ts
+private readonly api = inject(PortfolioApiService);
 hello = rxResource({ stream: () => this.api.getHello() });
 ```
 
+```html
+@if (hello.isLoading()) { … } @else if (hello.error()) { … } @else { {{ hello.value() | json }} }
+```
+
 Ofrece señales `value()`, `error()`, `isLoading()`. Es el reemplazo de los `try/catch` + manipular el
-DOM a mano del original. Observa cómo el estado de error (✗) aparece sin que escribas código para
-"mostrarlo": solo la plantilla `@if` reacciona.
+DOM a mano del original: el estado de error aparece sin que escribas código para "mostrarlo", solo
+la plantilla `@if` reacciona.
 
 ## 10. Estilos
 
@@ -333,6 +343,9 @@ Detalles que vale la pena notar:
 10. **Desplegar.** Sigue [DESPLIEGUE-AZURE.md](DESPLIEGUE-AZURE.md) para publicar el sitio.
 11. **Un tercer idioma.** Añade `'fr'` al tipo `Lang`, una clave `fr` en `Localized` y un botón en el
     selector. El compilador te señalará cada texto al que le falta la traducción.
+12. **Volver a usar la API.** Crea un componente con `rxResource` que llame a
+    `PortfolioApiService.getHello()` y muéstralo en una sección nueva (ejercicio 2). Necesitas el backend
+    corriendo (`dotnet run --urls http://localhost:5050` en `backend/`) y revisar `API_BASE`.
 
 ## Glosario rápido
 

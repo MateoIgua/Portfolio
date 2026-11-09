@@ -1,13 +1,5 @@
 import { Component, afterNextRender, inject } from '@angular/core';
-import {
-  EXPERIMENTS,
-  MARQUEE_ABOUT,
-  MARQUEE_EXPERIMENTS,
-  MARQUEE_TECH,
-  PROJECTS,
-  SKILLS,
-  STACK_CARDS,
-} from '../../data/portfolio.data';
+import { EXPERIMENTS, MARQUEE_WORDS, PROJECTS, SKILLS, STACK_CARDS } from '../../data/portfolio.data';
 import { ActivatedRoute } from '@angular/router';
 import { UI } from '../../data/ui';
 import { SectionNav } from '../../layout/section-nav';
@@ -17,15 +9,14 @@ import { BigStatement } from '../../shared/big-statement';
 import { Hero } from '../../shared/hero';
 import { Marquee } from '../../shared/marquee';
 import { ProjectRegistry } from '../../shared/project-registry';
-import { WidgetDemo } from '../widget-demo/widget-demo';
 
-// La página única: las antiguas Home, Proyectos, Experimentos, Sobre mí y
-// Widget demo ahora son secciones de este mismo componente. Cada <section>
+// La página única: las antiguas Home, Proyectos, Experimentos y Sobre mí
+// ahora son secciones de este mismo componente. Cada <section>
 // lleva un id que coincide con SECTIONS (services/section-spy.ts); el menú de
 // la derecha (<app-section-nav>) las enlaza y resalta la que se está viendo.
 @Component({
   selector: 'app-portfolio',
-  imports: [SectionNav, Hero, BigStatement, Marquee, ProjectRegistry, WidgetDemo],
+  imports: [SectionNav, Hero, BigStatement, Marquee, ProjectRegistry],
   template: `
     <app-section-nav />
 
@@ -80,7 +71,6 @@ import { WidgetDemo } from '../widget-demo/widget-demo';
         {{ i18n.t(ui.statementStackPre) }}<span class="accent">{{ i18n.t(ui.statementStackAccent) }}</span
         >.
       </app-big-statement>
-      <app-marquee [words]="techWords" />
     </section>
 
     <!-- 03 · PROYECTOS -->
@@ -170,7 +160,6 @@ import { WidgetDemo } from '../widget-demo/widget-demo';
         {{ i18n.t(ui.statementExpPre) }}<span class="accent">{{ i18n.t(ui.statementExpAccent) }}</span
         >{{ i18n.t(ui.statementExpPost) }}
       </app-big-statement>
-      <app-marquee [words]="experimentWords" />
     </section>
 
     <!-- 05 · SOBRE MÍ -->
@@ -248,24 +237,10 @@ import { WidgetDemo } from '../widget-demo/widget-demo';
         {{ i18n.t(ui.statementAboutPre) }}<span class="accent">{{ i18n.t(ui.statementAboutAccent) }}</span
         >{{ i18n.t(ui.statementAboutPost) }}
       </app-big-statement>
-      <app-marquee [words]="aboutWords" />
     </section>
 
-    <!-- 06 · API -->
-    <section id="api" class="section spy">
-      <div class="container">
-        <p class="section-label">{{ i18n.t(ui.apiLabel) }}</p>
-        <h2 class="section-title">{{ i18n.t(ui.apiTitle) }}</h2>
-
-        <!-- @defer: el componente (y sus llamadas HTTP) solo se carga cuando el
-             marcador entra en pantalla. -->
-        @defer (on viewport) {
-          <app-widget-demo />
-        } @placeholder {
-          <div class="defer-placeholder"></div>
-        }
-      </div>
-    </section>
+    <!-- Marquesina: aparece una sola vez, al final de la página -->
+    <app-marquee [words]="marqueeWords" />
   `,
 })
 export class Portfolio {
@@ -278,9 +253,7 @@ export class Portfolio {
   protected readonly projects = PROJECTS;
   protected readonly experiments = EXPERIMENTS;
   protected readonly skills = SKILLS;
-  protected readonly techWords = MARQUEE_TECH;
-  protected readonly experimentWords = MARQUEE_EXPERIMENTS;
-  protected readonly aboutWords = MARQUEE_ABOUT;
+  protected readonly marqueeWords = MARQUEE_WORDS;
 
   constructor() {
     // Si se entra con una URL como /#projects (o desde /proyectos, que redirige

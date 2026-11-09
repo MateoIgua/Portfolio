@@ -29,7 +29,7 @@ npm install
 npm start          # http://localhost:4200
 ```
 
-### Backend (opcional; solo lo usa la página `/widget-demo`)
+### Backend (opcional; la interfaz actual no lo usa)
 
 ```bash
 cd backend

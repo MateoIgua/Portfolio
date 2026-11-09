@@ -14,7 +14,6 @@ export const SECTIONS: SectionDef[] = [
   { id: 'projects', label: { es: 'PROYECTOS', en: 'PROJECTS' } },
   { id: 'experiments', label: { es: 'EXPERIMENTOS', en: 'EXPERIMENTS' } },
   { id: 'about', label: { es: 'SOBRE MÍ', en: 'ABOUT' } },
-  { id: 'api', label: { es: 'API', en: 'API' } },
 ];
 
 // Guarda qué sección se está viendo (la calcula SectionNav al hacer scroll) para

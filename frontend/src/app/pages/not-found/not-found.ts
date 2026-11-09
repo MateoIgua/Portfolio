@@ -9,7 +9,7 @@ import { I18n } from '../../services/i18n';
   template: `
     <section class="hero">
       <div class="container">
-        <p class="hero-label api-error">{{ i18n.t(ui.nfLabel) }}</p>
+        <p class="hero-label is-error">{{ i18n.t(ui.nfLabel) }}</p>
         <h1 class="hero-title"><span class="accent">404</span></h1>
         <p class="hero-tagline">{{ i18n.t(ui.nfText) }}</p>
         <div class="hero-cta">

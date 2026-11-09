@@ -7,7 +7,7 @@ import { I18n } from '../services/i18n';
   template: `
     <footer class="footer">
       <div class="container footer-inner">
-        <span>&copy; 2026 MATEO IGUA · {{ i18n.t(ui.footerBuilt) }}</span>
+        <span>&copy; 2026 MATEO IGUA</span>
         <span>{{ i18n.t(ui.footerUpdate) }}</span>
       </div>
     </footer>

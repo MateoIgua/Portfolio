@@ -116,6 +116,8 @@ export const STACK_CARDS: StackCard[] = [
   { icon: '[07]', title: l('Sistemas operativos', 'Operating systems'), tags: ['Windows', 'Android', 'Linux', 'OS/400'] },
 ];
 
-export const MARQUEE_TECH = ['C#', '.NET', 'BLAZOR', 'ANGULAR', 'SQL', 'EF CORE', 'SOLID', 'OOP', 'REFACTORING', 'GIT', 'VISUAL STUDIO'];
-export const MARQUEE_EXPERIMENTS = ['EXPERIMENT', 'BUILD', 'LEARN', 'BREAK', 'FIX', 'REPEAT', 'NOTE', 'SHIP', 'REVIEW', 'ITERATE'];
-export const MARQUEE_ABOUT = ['HIRE ME', "LET'S TALK", 'OPEN TO COLLAB', 'BACKEND', '.NET', 'C#', 'SOLID', 'OPEN SOURCE', 'LEARNING', 'BUILDING'];
+// Palabras de la marquesina que cierra la página.
+export const MARQUEE_WORDS = [
+  'HIRE ME', "LET'S TALK", 'OPEN TO COLLAB', 'C#', '.NET', 'BLAZOR', 'ANGULAR', 'SQL', 'EF CORE',
+  'SOLID', 'OOP', 'REFACTORING', 'GIT', 'OPEN SOURCE', 'LEARNING', 'BUILDING',
+];

@@ -924,33 +924,7 @@ body::before {
     margin-top: var(--space-5);
 }
 
-.steps {
-    max-width: 62ch;
-    padding-left: var(--space-4);
-    list-style: decimal;
-}
-
-.steps li {
-    margin-bottom: var(--space-2);
-}
-
-.api-out {
-    overflow-x: auto;
-    color: var(--text-bright);
-    font-size: 1.1rem;
-}
-
-.api-ok    { color: var(--text-bright); }
-.api-error { color: var(--error); }
-
-.defer-placeholder {
-    min-height: 24rem;
-}
-
-code {
-    font-family: var(--font-mono);
-    color: var(--text-bright);
-}
+.is-error { color: var(--error); }
 
 @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
