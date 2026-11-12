@@ -8,13 +8,14 @@ export const UI = {
   // Barra superior / pie
   langLabel: l('Idioma', 'Language'),
   railLabel: l('Secciones de la página', 'Page sections'),
+  footerHow: l('CÓMO SE HIZO ESTE SITIO →', 'HOW THIS SITE WAS BUILT →'),
   footerUpdate: l('v3.0 · ÚLTIMA ACTUALIZACIÓN 2026-10-31', 'v3.0 · LAST UPDATE 2026-10-31'),
 
   // Inicio
   heroLabel: l('DEVELOPER · .NET / C#'),
   heroText: l(
-    'Construyo backend y herramientas con C# y .NET. Práctico arquitectura limpia, refactorización y automatización. Acá vive lo que voy aprendiendo.',
-    "I build backend services and tools with C# and .NET. I practice clean architecture, refactoring and automation. What I'm learning lives here.",
+    'Soy un ingeniero de sistemas con experiencia en el sector bancario y aeronáutico.\nMe intereso por los problemas de tu proyecto para poder aportar valor a tu negocio.',
+    "I'm a systems engineer with experience in the banking and aeronautics sectors.\nI'm interested in the problems behind your project so I can add value to your business.",
   ),
   ctaProjects: l('VER PROYECTOS →', 'VIEW PROJECTS →'),
   ctaAbout: l('SOBRE MÍ', 'ABOUT ME'),
@@ -25,83 +26,67 @@ export const UI = {
   interestedIn: l('Interesado en:', 'Interested in:'),
   statementStackPre: l('EL CÓDIGO LIMPIO NO ES UN DESTINO, ES UNA ', "CLEAN CODE ISN'T A DESTINATION, IT'S A "),
   statementStackAccent: l('PRÁCTICA DIARIA', 'DAILY PRACTICE'),
-  nowLabel: l('AHORA', 'NOW'),
-  nowTitle: l('EN QUÉ ESTOY', "WHAT I'M DOING"),
-  nowText: l(
-    'Reconstruyendo este portafolio en Angular para aprender el framework a partir de un proyecto real que ya conozco: componentes, rutas, servicios y señales. Antes vivió en Blazor y en HTML/CSS puros.',
-    'Rebuilding this portfolio in Angular to learn the framework from a real project I already know: components, routing, services and signals. It used to live in Blazor and in plain HTML/CSS.',
-  ),
+
+  // Servicios
+  servicesLabel: l('SERVICIOS', 'SERVICES'),
+  servicesTitle: l('EN QUÉ TE PUEDO AYUDAR', 'HOW I CAN HELP'),
 
   // Proyectos
   projectsLabel: l('REGISTRO DE PROYECTOS', 'PROJECT REGISTRY'),
   projectsTitle: l('PROYECTOS', 'PROJECTS'),
   projectsIntro: l(
-    'Cosas que he construido mientras aprendo. Cada uno fue un experimento con un objetivo claro: entender un concepto, practicar un patrón, o simplemente hacer algo útil.',
-    'Things I have built while learning. Each one was an experiment with a clear goal: understanding a concept, practicing a pattern, or simply making something useful.',
+    'Cada proyecto apunta a un problema real y a algo que quiero entender mejor.',
+    'Every project aims at a real problem and at something I want to understand better.',
   ),
   code: l('→ CÓDIGO', '→ CODE'),
+  projectWhy: l('POR QUÉ', 'WHY'),
   projectList: l('Lista de proyectos', 'Project list'),
   statementProjectsPre: l('CADA PROYECTO RESPONDE A UNA ', 'EVERY PROJECT ANSWERS A '),
   statementProjectsAccent: l('PREGUNTA', 'QUESTION'),
 
-  // Experimentos
-  expLabel: l('LAB · PIEZAS CORTAS', 'LAB · SHORT PIECES'),
+  // Experimentos (subsección de Proyectos)
   expTitle: l('EXPERIMENTOS', 'EXPERIMENTS'),
   expIntro: l(
     'Pruebas chicas, snippets, ejercicios y exploraciones. Lugar donde aterrizan ideas antes de ser "proyectos" hechos y derechos. Aquí lo que importa es probar, no terminar.',
     'Small tests, snippets, exercises and explorations. A place where ideas land before they become full "projects". What matters here is trying things, not finishing them.',
   ),
-  expLog: l('LAB · LOG'),
-  statementExpPre: l('APRENDER ES ', 'LEARNING IS '),
-  statementExpAccent: l('EXPERIMENTAR', 'EXPERIMENTING'),
-  statementExpPost: l(' Y DOCUMENTAR.', ' AND DOCUMENTING.'),
-  legendLabel: l('LEYENDA', 'LEGEND'),
-  legendTitle: l('QUÉ ES ESTO', 'WHAT IS THIS'),
-  legendText: l(
-    'Estos experimentos son ejercicios cortos — algunos completos, otros a medio terminar. Sirven para fijar conceptos y tener material de referencia para futuros proyectos.',
-    'These experiments are short exercises — some complete, some half-finished. They help me lock in concepts and keep reference material for future projects.',
-  ),
-  statusHeader: l('STATUS'),
-  statusEntries: l('entradas', 'entries'),
-  statusSelfPublished: l('Auto-publicados', 'Self-published'),
-  statusNoWarranty: l('Sin garantía', 'No warranty'),
-  statusOpenSource: l('Open source'),
 
   // Sobre mí
   aboutLabel: l('EXTRACT FROM: ABOUT.TXT'),
   aboutTitle: l('SOBRE MÍ', 'ABOUT ME'),
-  aboutIntro: l(
-    'Desarrollador en formación, enfocado en C# y el ecosistema .NET. Me interesa el diseño de sistemas backend, la arquitectura limpia y construir cosas que sean fáciles de mantener.',
-    'Developer in training, focused on C# and the .NET ecosystem. I care about backend system design, clean architecture and building things that are easy to maintain.',
+  aboutP1: l(
+    'Soy Mateo Igua, ingeniero de sistemas con 4 años de experiencia desarrollando soluciones. Me interesa el diseño de sistemas reales y que entreguen valor a sus usuarios. Los proyectos personales que construyo no solamente son para fortalecer mis habilidades sino también para transmitir confianza.',
+    "I'm Mateo Igua, a systems engineer with 4 years of experience building solutions. I care about designing real systems that deliver value to their users. The personal projects I build are not only to strengthen my skills but also to build trust.",
   ),
-  whoLabel: l('QUIÉN', 'WHO'),
-  whoTitle: l('EL DESARROLLADOR', 'THE DEVELOPER'),
-  whoP1Pre: l('Soy ', "I'm "),
-  whoP1Post: l(
-    '. Llevo un tiempo construyendo proyectos personales en C# para fortalecer mis bases: arquitectura por capas, OOP, LINQ, EF Core y patrones de diseño.',
-    '. For a while now I have been building personal projects in C# to strengthen my foundations: layered architecture, OOP, LINQ, EF Core and design patterns.',
+  aboutP2: l(
+    'Estoy convencido de que los ejercicios pequeños bien hechos enseñan más que proyectos enormes a medias. Por eso este portafolio tendrá una sección entera de experimentos: piezas cortas pero bien documentadas.',
+    'I am convinced that small, well-done exercises teach more than huge half-finished projects. That is why this portfolio will have an entire section of experiments: short but well-documented pieces.',
   ),
-  whoP2Pre: l(
-    'Estoy convencido de que los ejercicios pequeños bien hechos enseñan más que proyectos enormes a medias. Por eso este portafolio tiene una sección entera de ',
-    'I am convinced that small, well-done exercises teach more than huge half-finished projects. That is why this portfolio has an entire section of ',
-  ),
-  whoP2Strong: l('experimentos', 'experiments'),
-  whoP2Post: l(': piezas cortas pero bien documentadas.', ': short but well-documented pieces.'),
-  whoP3: l(
-    'Fuera del código, me interesa entender por qué las cosas funcionan: leer sobre patrones, ver cómo resuelven problemas otros desarrolladores, y aplicar eso en lo siguiente que construyo.',
-    'Outside of code, I like understanding why things work: reading about patterns, seeing how other developers solve problems, and applying that to whatever I build next.',
+  aboutP3: l(
+    'Fuera del código, me interesa entender por qué las cosas funcionan: leer sobre patrones, ver cómo resuelven problemas otros desarrolladores, y aplicar eso en los siguientes proyectos.',
+    'Outside of code, I like understanding why things work: reading about patterns, seeing how other developers solve problems, and applying that to my next projects.',
   ),
   contact: l('CONTACTO', 'CONTACT'),
   cvDownload: l('DESCARGAR HOJA DE VIDA ↓', 'DOWNLOAD RÉSUMÉ ↓'),
-  quoteHeader: l('EXTRACT FROM · CITA', 'EXTRACT FROM · QUOTE'),
-  quote: l(
-    '"La variedad de soluciones es infinita. Si hoy, cuando tenemos miles de bibliotecas distintas, podemos distinguir miles de patrones, mañana, cuando aparezcan nuevos paradigmas, podremos distinguir diez, veinte o treinta mil más — no de manera imitativa, sino para combinarlos según nuestra imaginación."',
-    '"The variety of solutions is infinite. If today, when we have thousands of different libraries, we can tell thousands of patterns apart, tomorrow, when new paradigms appear, we will be able to tell ten, twenty or thirty thousand more — not imitatively, but to combine them according to our imagination."',
-  ),
-  quoteAuthor: l('— LIBREMENTE ADAPTADO DE LUIGI RUSSOLO, 1913', '— LOOSELY ADAPTED FROM LUIGI RUSSOLO, 1913'),
   statementAboutPre: l('ESCRIBIR CÓDIGO ES ', 'WRITING CODE IS '),
   statementAboutAccent: l('PENSAR', 'THINKING'),
   statementAboutPost: l(' CLARO POR ESCRITO.', ' CLEARLY IN WRITING.'),
+
+  // Página "Cómo se hizo"
+  howLabel: l('DETRÁS DE ESCENA', 'BEHIND THE SCENES'),
+  howTop: l('CÓMO SE', 'HOW IT'),
+  howBottom: l('HIZO', 'WAS BUILT'),
+  howIntro: l(
+    'Un recorrido por las piezas de este portafolio: qué tecnologías usa, cómo está organizado y cómo se publica.',
+    'A tour of the pieces behind this portfolio: which technologies it uses, how it is organized and how it is published.',
+  ),
+  howBack: l('← VOLVER AL INICIO', '← BACK TO HOME'),
+
+  // En construcción
+  ucLabel: l('ESTADO · EN OBRAS', 'STATUS · WORK IN PROGRESS'),
+  ucTitle: l('EN CONSTRUCCIÓN', 'UNDER CONSTRUCTION'),
+  ucText: l('Esta página todavía no está lista. Vuelve pronto.', 'This page is not ready yet. Come back soon.'),
+  expMore: l('→ VER MÁS', '→ READ MORE'),
 
   // 404
   nfLabel: l('ERROR · RUTA NO ENCONTRADA', 'ERROR · ROUTE NOT FOUND'),

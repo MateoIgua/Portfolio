@@ -20,7 +20,7 @@ Es un monorepo con tres carpetas:
 ## Hoja de vida
 
 El botón "Descargar hoja de vida" (sección Sobre mí) descarga `frontend/public/cv/Mateo-Igua-CV.pdf`.
-Coloca ahí tu PDF con ese nombre.
+El archivo ya está ahí; para actualizarlo, reemplázalo conservando el nombre.
 
 ## Cómo ejecutarlo
 

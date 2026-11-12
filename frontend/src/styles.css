@@ -679,6 +679,14 @@ p {
     color: var(--text);
 }
 
+.footer .footer-link {
+    color: var(--accent);
+}
+
+.footer .footer-link:hover {
+    color: var(--bg);
+}
+
 
 /* -----------------------------------------------------------------
    14. Scanline overlay (CRT-style decoration)
@@ -839,23 +847,42 @@ body::before {
     display: grid;
     grid-template-columns: 3fr 2fr;
     gap: var(--space-5);
-    align-items: start;
+    align-items: stretch; /* la caja de la derecha mide lo mismo que la columna izquierda */
+}
+
+.project-main {
+    min-width: 0;
 }
 
 .project-list {
+    --row-h: 3.5rem;
     border: 1px solid var(--border);
     background: var(--bg-surface);
+    /* Alto de 4 filas (+2px de borde); con más proyectos, la lista hace scroll. */
+    max-height: calc(4 * var(--row-h) + 2px);
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-bright) transparent;
 }
 
 .project-row {
     display: grid;
     grid-template-columns: 6.5rem 1fr auto;
-    align-items: baseline;
+    align-items: center;
     gap: var(--space-3);
-    padding: var(--space-3) var(--space-4);
+    height: var(--row-h);
+    padding: 0 var(--space-4);
     border-bottom: 1px solid var(--border);
     box-shadow: inset 3px 0 0 transparent;
     transition: background-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.project-title {
+    min-width: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    text-align: left;
 }
 
 .project-row:last-child {
@@ -899,17 +926,25 @@ body::before {
 }
 
 .project-detail {
-    /* altura fija: si el texto no cabe, se desplaza dentro de la caja */
-    height: 34rem;
-    overflow-y: auto;
-    scrollbar-width: thin;
-    scrollbar-color: var(--border-bright) transparent;
+    position: relative;
+    min-height: 28rem;
     border: 1px solid var(--border);
     background: var(--bg-surface);
+}
+
+/* El contenido va en posición absoluta: no estira la fila, así que la caja mide lo mismo
+   que la lista y, si el texto no cabe, se desplaza dentro de la caja. */
+.project-detail-scroll {
+    position: absolute;
+    inset: 0;
+    overflow-y: auto;
     padding: var(--space-4);
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-bright) transparent;
 }
 
 .project-preview {
+    position: relative;
     display: grid;
     place-items: center;
     aspect-ratio: 16 / 10;
@@ -927,12 +962,40 @@ body::before {
     object-fit: cover;
 }
 
-/* Sin imagen: el id del proyecto hace de logo */
-.project-logo {
+/* El GIF no se puede seleccionar ni arrastrar */
+.project-gif {
+    user-select: none;
+    pointer-events: none;
+}
+
+/* Título del proyecto encima del GIF, resaltado sobre la animación */
+.project-overlay {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-content: center;
+    gap: var(--space-1);
+    padding: var(--space-3);
+    text-align: center;
+    background: radial-gradient(ellipse at center, rgba(5, 7, 6, 0.8) 0%, rgba(5, 7, 6, 0.35) 60%, transparent 100%);
+    pointer-events: none;
+}
+
+.project-overlay-id {
     font-family: var(--font-mono);
-    font-size: clamp(3rem, 9vw, 5rem);
+    font-size: 1.3rem;
     color: var(--accent);
-    letter-spacing: 0.05em;
+    letter-spacing: 0.1em;
+}
+
+.project-overlay-name {
+    font-family: var(--font-display);
+    font-size: clamp(1.4rem, 3vw, 2rem);
+    line-height: 1.05;
+    text-transform: uppercase;
+    letter-spacing: -0.02em;
+    color: var(--text-bright);
+    text-shadow: 0 0 12px var(--bg), 0 0 24px var(--bg);
 }
 
 .btn--block {
@@ -944,35 +1007,54 @@ body::before {
     margin-top: var(--space-4);
 }
 
-.legend {
-    margin-top: var(--space-6);
-}
 
 .prose p {
     max-width: 62ch;
     margin-bottom: var(--space-3);
 }
 
-.quote-text {
-    font-family: var(--font-mono);
-    font-size: clamp(1.05rem, 2.4vw, 1.3rem);
-    line-height: 1.5;
-    color: var(--text-bright);
-    max-width: 62ch;
-    text-transform: uppercase;
-}
 
-.quote-author {
-    margin-top: var(--space-3);
-}
 
-.quote {
-    margin-top: var(--space-5);
-}
 
 .is-error { color: var(--error); }
 
+/* Texto que se escribe (shared/typewriter.ts) */
+.tw {
+    display: block;
+    position: relative;
+    white-space: pre-line;
+}
+
+.tw-full {
+    opacity: 0; /* reserva el alto del texto final y lo lee el lector de pantalla */
+    user-select: none;
+}
+
+.tw-typed {
+    position: absolute;
+    inset: 0;
+}
+
+.tw-cursor {
+    display: inline-block;
+    width: 2px;
+    height: 1.05em;
+    margin-left: 3px;
+    background: var(--accent);
+    vertical-align: text-bottom;
+    animation: blink 1s step-end infinite;
+}
+
+.tw-cursor.typing {
+    animation: none; /* fijo mientras escribe; parpadea al terminar */
+}
+
+.subsection {
+    margin-top: var(--space-7);
+}
+
 @media (prefers-reduced-motion: reduce) {
+    .tw-cursor { animation: none; }
     html { scroll-behavior: auto; }
     .marquee-track { animation: none; }
 }
@@ -1026,11 +1108,16 @@ body::before {
         grid-template-columns: 1fr;
         gap: var(--space-4);
     }
+    .project-detail {
+        min-height: 0;
+        height: 30rem;
+    }
+    .project-list { --row-h: 4.75rem; }
     .project-row {
         grid-template-columns: 1fr auto;
         grid-template-areas: "date date" "title link";
         gap: var(--space-1) var(--space-3);
-        padding: var(--space-3);
+        padding: 0 var(--space-3);
     }
     .project-date  { grid-area: date; }
     .project-title { grid-area: title; }
@@ -1070,4 +1157,36 @@ body::before {
 /* Las tarjetas nunca fuerzan un ancho mayor que la pantalla. */
 .cards-grid {
     grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr));
+}
+
+
+/* -----------------------------------------------------------------
+   Página "Cómo se hizo"
+   ----------------------------------------------------------------- */
+.page-back {
+    margin-top: var(--space-5);
+}
+
+/* Stack: 4 columnas; la última tarjeta (Herramientas) ocupa 2 para cerrar la fila */
+.cards-grid--4 {
+    grid-template-columns: repeat(4, 1fr);
+}
+.cards-grid--4 .card:last-child {
+    grid-column: span 2;
+}
+@media (max-width: 1100px) {
+    .cards-grid--4 {
+        grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr));
+    }
+    .cards-grid--4 .card:last-child {
+        grid-column: auto;
+    }
+}
+
+/* Enlace al pie de una tarjeta (experimentos) */
+.card-link {
+    display: inline-block;
+    margin-top: var(--space-3);
+    font-family: var(--font-mono);
+    font-size: 1rem;
 }

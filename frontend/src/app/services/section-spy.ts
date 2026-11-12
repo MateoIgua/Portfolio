@@ -11,8 +11,8 @@ export interface SectionDef {
 export const SECTIONS: SectionDef[] = [
   { id: 'home', label: { es: 'INICIO', en: 'HOME' } },
   { id: 'stack', label: { es: 'STACK', en: 'STACK' } },
+  { id: 'services', label: { es: 'SERVICIOS', en: 'SERVICES' } },
   { id: 'projects', label: { es: 'PROYECTOS', en: 'PROJECTS' } },
-  { id: 'experiments', label: { es: 'EXPERIMENTOS', en: 'EXPERIMENTS' } },
   { id: 'about', label: { es: 'SOBRE MÍ', en: 'ABOUT' } },
 ];
 

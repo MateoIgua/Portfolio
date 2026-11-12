@@ -10,8 +10,7 @@ export interface Localized {
 export interface Project {
   id: string;
   name: Localized;
-  status: Localized;
-  updated: string; // fecha de la última modificación (AAAA-MM-DD)
+  updated: string; // fecha de la última modificación (AAAA-MM-DD) o '—'
   codeUrl: string; // enlace al código
   description: Localized;
   tags: Localized[];
@@ -20,9 +19,22 @@ export interface Project {
 
 export interface Experiment {
   id: string;
-  title: string;
+  title: Localized;
   description: Localized;
   tags: Localized[];
+}
+
+export interface Service {
+  icon: string;
+  title: Localized;
+  description: Localized;
+}
+
+export interface BuildNote {
+  icon: string;
+  title: Localized;
+  description: Localized;
+  tags: string[];
 }
 
 export interface StackCard {
