@@ -10,6 +10,8 @@ const toSection = (id: string) => () => inject(Router).parseUrl(`/#${id}`);
 // solo la ruta "no encontrada" se carga de forma perezosa (loadComponent).
 export const routes: Routes = [
   { path: '', title: 'Mateo Igua', component: Portfolio },
+  { path: 'como-se-hizo', title: 'Cómo se hizo · Mateo Igua', loadComponent: () => import('./pages/how-built/how-built').then(m => m.HowBuilt) },
+  { path: 'en-construccion', title: 'En construcción · Mateo Igua', loadComponent: () => import('./pages/under-construction/under-construction').then(m => m.UnderConstruction) },
   { path: 'proyectos', redirectTo: toSection('projects') },
   { path: 'experimentos', redirectTo: toSection('experiments') },
   { path: 'sobre-mi', redirectTo: toSection('about') },

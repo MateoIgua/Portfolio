@@ -1,6 +1,6 @@
 import { Component, afterNextRender, computed, inject, signal } from '@angular/core';
-import { EXPERIMENTS, MARQUEE_WORDS, PROJECTS, STACK_CARDS } from '../../data/portfolio.data';
-import { ActivatedRoute } from '@angular/router';
+import { EXPERIMENTS, MARQUEE_WORDS, PROJECTS, SERVICES, STACK_CARDS } from '../../data/portfolio.data';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { UI } from '../../data/ui';
 import { SectionNav } from '../../layout/section-nav';
 import { I18n } from '../../services/i18n';
@@ -8,21 +8,22 @@ import { SECTIONS, SectionSpy } from '../../services/section-spy';
 import { BigStatement } from '../../shared/big-statement';
 import { Hero } from '../../shared/hero';
 import { Marquee } from '../../shared/marquee';
+import { TypeWriter } from '../../shared/typewriter';
 
-// La página única: las antiguas Home, Proyectos, Experimentos y Sobre mí
-// ahora son secciones de este mismo componente. Cada <section>
+// La página única: Inicio, Stack, Servicios, Proyectos (con Experimentos como
+// subsección) y Sobre mí son secciones de este mismo componente. Cada <section>
 // lleva un id que coincide con SECTIONS (services/section-spy.ts); el menú de
 // la derecha (<app-section-nav>) las enlaza y resalta la que se está viendo.
 @Component({
   selector: 'app-portfolio',
-  imports: [SectionNav, Hero, BigStatement, Marquee],
+  imports: [RouterLink, SectionNav, Hero, BigStatement, Marquee, TypeWriter],
   template: `
     <app-section-nav />
 
     <!-- 01 · INICIO -->
     <div id="home" class="spy">
       <app-hero [label]="i18n.t(ui.heroLabel)" top="MATEO" bottom="IGUA">
-        {{ i18n.t(ui.heroText) }}
+        <app-typewriter [text]="i18n.t(ui.heroText)" />
         <div cta class="hero-cta">
           <a href="#projects" class="btn btn--primary" (click)="go($event, 'projects')">{{
             i18n.t(ui.ctaProjects)
@@ -40,7 +41,7 @@ import { Marquee } from '../../shared/marquee';
         <p class="section-label">{{ i18n.t(ui.stackLabel) }}</p>
         <h2 class="section-title">{{ i18n.t(ui.stackTitle) }}</h2>
 
-        <div class="cards-grid">
+        <div class="cards-grid cards-grid--4">
           @for (card of stack; track card.icon) {
             <article class="card">
               <p class="card-icon">{{ card.icon }}</p>
@@ -61,9 +62,6 @@ import { Marquee } from '../../shared/marquee';
             </article>
           }
         </div>
-
-        <h3 class="sub-title">{{ i18n.t(ui.nowTitle) }}</h3>
-        <p class="section-intro">{{ i18n.t(ui.nowText) }}</p>
       </div>
 
       <app-big-statement>
@@ -72,61 +70,117 @@ import { Marquee } from '../../shared/marquee';
       </app-big-statement>
     </section>
 
-    <!-- 03 · PROYECTOS -->
+    <!-- 03 · SERVICIOS -->
+    <section id="services" class="section spy">
+      <div class="container">
+        <p class="section-label">{{ i18n.t(ui.servicesLabel) }}</p>
+        <h2 class="section-title">{{ i18n.t(ui.servicesTitle) }}</h2>
+
+        <div class="cards-grid">
+          @for (sv of services; track sv.icon) {
+            <article class="card">
+              <p class="card-icon">{{ sv.icon }}</p>
+              <h3 class="card-title">{{ i18n.t(sv.title) }}</h3>
+              <p class="card-text">{{ i18n.t(sv.description) }}</p>
+            </article>
+          }
+        </div>
+      </div>
+    </section>
+
+    <!-- 04 · PROYECTOS (incluye la subsección de experimentos) -->
     <section id="projects" class="section spy">
       <div class="container">
-        <p class="section-label">{{ i18n.t(ui.projectsLabel) }}</p>
-        <h2 class="section-title">{{ i18n.t(ui.projectsTitle) }}</h2>
-        <p class="section-intro">{{ i18n.t(ui.projectsIntro) }}</p>
-
-        <!-- Dos columnas 60 / 40: lista de proyectos (fecha · título · código) y, a la
-             derecha, la vista previa y la descripción del proyecto seleccionado. -->
+        <!-- Dos columnas 60 / 40. A la izquierda: título de la sección, introducción y lista de
+             proyectos (fecha · título · código). A la derecha, a la altura del título: la caja con
+             la animación, el nombre y la descripción del proyecto seleccionado. -->
         <div class="project-split">
-          <ul class="project-list" [attr.aria-label]="i18n.t(ui.projectList)">
-            @for (p of projects; track p.id) {
-              <li
-                class="project-row"
-                [class.selected]="p.id === selected()"
-                (mouseenter)="selected.set(p.id)"
-              >
-                <span class="project-date">{{ p.updated }}</span>
-                <button
-                  type="button"
-                  class="project-title"
-                  [attr.aria-pressed]="p.id === selected()"
-                  (click)="selected.set(p.id)"
-                  (focus)="selected.set(p.id)"
+          <div class="project-main">
+            <p class="section-label">{{ i18n.t(ui.projectsLabel) }}</p>
+            <h2 class="section-title">{{ i18n.t(ui.projectsTitle) }}</h2>
+            <p class="section-intro">{{ i18n.t(ui.projectsIntro) }}</p>
+
+            <ul class="project-list" [attr.aria-label]="i18n.t(ui.projectList)">
+              @for (p of projects; track p.id) {
+                <li
+                  class="project-row"
+                  [class.selected]="p.id === selected()"
+                  (mouseenter)="selected.set(p.id)"
                 >
-                  {{ i18n.t(p.name) }}
-                </button>
-                <a class="project-link" [href]="p.codeUrl" target="_blank" rel="noopener">{{
-                  i18n.t(ui.code)
-                }}</a>
-              </li>
-            }
-          </ul>
+                  <span class="project-date">{{ p.updated }}</span>
+                  <button
+                    type="button"
+                    class="project-title"
+                    [attr.aria-pressed]="p.id === selected()"
+                    (click)="selected.set(p.id)"
+                    (focus)="selected.set(p.id)"
+                  >
+                    {{ i18n.t(p.name) }}
+                  </button>
+                  <a class="project-link" [href]="p.codeUrl" target="_blank" rel="noopener">{{
+                    i18n.t(ui.code)
+                  }}</a>
+                </li>
+              }
+            </ul>
+          </div>
 
           @let cur = current();
           <aside class="project-detail" aria-live="polite">
-            <div class="project-preview">
-              @if (cur.image) {
-                <img [src]="cur.image" [alt]="i18n.t(cur.name)" loading="lazy" />
-              } @else {
-                <span class="project-logo">[{{ cur.id }}]</span>
-              }
-            </div>
-            <p class="card-icon">[{{ cur.id }}] · {{ i18n.t(cur.status) }}</p>
-            <h4 class="card-title">{{ i18n.t(cur.name).toUpperCase() }}</h4>
-            <p class="card-text">{{ i18n.t(cur.description) }}</p>
-            <div class="card-meta">
-              @for (tag of cur.tags; track $index; let last = $last) {
-                <span>{{ i18n.t(tag) }}</span>
-                @if (!last) {
-                  <span>·</span>
+            <div class="project-detail-scroll">
+              <div class="project-preview">
+                <!-- GIF (no es texto: no se puede seleccionar). Si el proyecto tiene su propia imagen, se usa esa. -->
+                <img
+                  class="project-gif"
+                  [src]="cur.image ?? defaultPreview"
+                  alt=""
+                  draggable="false"
+                  loading="lazy"
+                />
+                <div class="project-overlay">
+                  <span class="project-overlay-id">[{{ cur.id }}]</span>
+                  <span class="project-overlay-name">{{ i18n.t(cur.name) }}</span>
+                </div>
+              </div>
+              <p class="card-icon">{{ i18n.t(ui.projectWhy) }}</p>
+              <p class="card-text">{{ i18n.t(cur.description) }}</p>
+              <div class="card-meta">
+                @for (tag of cur.tags; track $index; let last = $last) {
+                  <span>{{ i18n.t(tag) }}</span>
+                  @if (!last) {
+                    <span>·</span>
+                  }
                 }
-              }
+              </div>
             </div>
           </aside>
+        </div>
+
+        <!-- Subsección: Experimentos. Conserva id="experiments" para el enlace /#experiments -->
+        <div id="experiments" class="spy subsection">
+          <h3 class="sub-title">{{ i18n.t(ui.expTitle) }}</h3>
+          <p class="section-intro">{{ i18n.t(ui.expIntro) }}</p>
+
+          <div class="cards-grid">
+            @for (e of experiments; track e.id) {
+              <article class="card">
+                <p class="card-icon">{{ e.id }}</p>
+                <h4 class="card-title">{{ i18n.t(e.title) }}</h4>
+                <p class="card-text">{{ i18n.t(e.description) }}</p>
+                <div class="card-meta">
+                  @for (tag of e.tags; track $index; let last = $last) {
+                    <span>{{ i18n.t(tag) }}</span>
+                    @if (!last) {
+                      <span>·</span>
+                    }
+                  }
+                </div>
+                <!-- Por ahora todas las páginas de experimentos llevan a "En construcción" -->
+                <a routerLink="/en-construccion" class="card-link">{{ i18n.t(ui.expMore) }}</a>
+              </article>
+            }
+          </div>
+
         </div>
       </div>
 
@@ -136,73 +190,17 @@ import { Marquee } from '../../shared/marquee';
       </app-big-statement>
     </section>
 
-    <!-- 04 · EXPERIMENTOS -->
-    <section id="experiments" class="section spy">
-      <div class="container">
-        <p class="section-label">{{ i18n.t(ui.expLabel) }}</p>
-        <h2 class="section-title">{{ i18n.t(ui.expTitle) }}</h2>
-        <p class="section-intro">{{ i18n.t(ui.expIntro) }}</p>
-
-        <div class="cards-grid">
-          @for (e of experiments; track e.id) {
-            <article class="card">
-              <p class="card-icon">{{ e.id }}</p>
-              <h4 class="card-title">{{ e.title }}</h4>
-              <p class="card-text">{{ i18n.t(e.description) }}</p>
-              <div class="card-meta">
-                @for (tag of e.tags; track $index; let last = $last) {
-                  <span>{{ i18n.t(tag) }}</span>
-                  @if (!last) {
-                    <span>·</span>
-                  }
-                }
-              </div>
-            </article>
-          }
-        </div>
-
-        <div class="two-col legend">
-          <div>
-            <p class="section-label">{{ i18n.t(ui.legendLabel) }}</p>
-            <h3 class="sub-title sub-title--first">{{ i18n.t(ui.legendTitle) }}</h3>
-            <p class="section-intro">{{ i18n.t(ui.legendText) }}</p>
-          </div>
-          <div class="info-block">
-            <p class="info-block-header">{{ i18n.t(ui.statusHeader) }}</p>
-            <ul>
-              <li>{{ experiments.length.toString().padStart(2, '0') }} {{ i18n.t(ui.statusEntries) }}</li>
-              <li>{{ i18n.t(ui.statusSelfPublished) }}</li>
-              <li>{{ i18n.t(ui.statusNoWarranty) }}</li>
-              <li>{{ i18n.t(ui.statusOpenSource) }}</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-
-      <app-big-statement>
-        {{ i18n.t(ui.statementExpPre) }}<span class="accent">{{ i18n.t(ui.statementExpAccent) }}</span
-        >{{ i18n.t(ui.statementExpPost) }}
-      </app-big-statement>
-    </section>
-
     <!-- 05 · SOBRE MÍ -->
     <section id="about" class="section spy">
       <div class="container">
         <p class="section-label">{{ i18n.t(ui.aboutLabel) }}</p>
         <h2 class="section-title">{{ i18n.t(ui.aboutTitle) }}</h2>
-        <p class="section-intro">{{ i18n.t(ui.aboutIntro) }}</p>
 
         <div class="two-col">
           <div class="prose">
-            <h3 class="sub-title sub-title--first">{{ i18n.t(ui.whoTitle) }}</h3>
-            <p>
-              {{ i18n.t(ui.whoP1Pre) }}<strong>Mateo Igua</strong>{{ i18n.t(ui.whoP1Post) }}
-            </p>
-            <p>
-              {{ i18n.t(ui.whoP2Pre) }}<strong>{{ i18n.t(ui.whoP2Strong) }}</strong
-              >{{ i18n.t(ui.whoP2Post) }}
-            </p>
-            <p>{{ i18n.t(ui.whoP3) }}</p>
+            <p>{{ i18n.t(ui.aboutP1) }}</p>
+            <p>{{ i18n.t(ui.aboutP2) }}</p>
+            <p>{{ i18n.t(ui.aboutP3) }}</p>
           </div>
 
           <div class="info-block">
@@ -226,11 +224,6 @@ import { Marquee } from '../../shared/marquee';
           </div>
         </div>
 
-        <div class="info-block quote">
-          <p class="info-block-header">{{ i18n.t(ui.quoteHeader) }}</p>
-          <p class="quote-text">{{ i18n.t(ui.quote) }}</p>
-          <p class="mono dim quote-author">{{ i18n.t(ui.quoteAuthor) }}</p>
-        </div>
       </div>
 
       <app-big-statement>
@@ -250,6 +243,9 @@ export class Portfolio {
   protected readonly ui = UI;
 
   protected readonly stack = STACK_CARDS;
+  // Vista previa por defecto de los proyectos sin imagen propia (public/preview-code.gif)
+  protected readonly defaultPreview = 'preview-code.gif';
+  protected readonly services = SERVICES;
   protected readonly projects = PROJECTS;
   // Proyecto seleccionado en la lista (al pasar el mouse, enfocar o tocar); computed lo busca.
   protected readonly selected = signal(PROJECTS[0].id);
